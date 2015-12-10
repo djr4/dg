@@ -834,14 +834,22 @@
 	}
 	dg.geom.Intersection.prototype.ll = function() { 
 		// assuming k1 * k2 !== -1 
-		// vertical lines are big exception (slope undefined)
 		var k1 = (this._g0._p1.y() - this._g0._p0.y())/(this._g0._p1.x() - this._g0._p0.x());
 		var k2 = (this._g1._p1.y() - this._g1._p0.y())/(this._g1._p1.x() - this._g1._p0.x());
 		var n1 = -this._g0._p0.x() * k1 + this._g0._p0.y();
 		var n2 = -this._g1._p0.x() * k2 + this._g1._p0.y();
 		
+
 		var x = (n2 - n1) / (k1 - k2);
 		var y = k1 * x + n1;
+		
+		if(this._g0._p1.x() - this._g0._p0.x() == 0) {
+			x = this._g0._p1.x();
+			y = k2 * x + n2;
+		} else if(this._g1._p1.x() - this._g1._p0.x() == 0) {
+			x = this._g1._p1.x();
+			y = k1 * x + n1;
+		}
 		
 		var p = new dg.geom.Point([x, y]);
 		p._free = false;
@@ -859,6 +867,14 @@
 		
 		var x = (n2 - n1) / (k1 - k2);
 		var y = k1 * x + n1;
+
+		if(this._g0._p1.x() - this._g0._p0.x() == 0) {
+			x = this._g0._p1.x();
+			y = k2 * x + n2;
+		} else if(this._g1._p1.x() - this._g1._p0.x() == 0) {
+			x = this._g1._p1.x();
+			y = k1 * x + n1;
+		}
 		
 		this._intersections[0].x(x).y(y);		
 	}
