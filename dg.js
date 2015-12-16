@@ -974,12 +974,8 @@
 		p2 = dg.geom.transform(p2.xy());
 		
 		var points = [ p0, intersection, p2  ];
-		if(this._sint1 < 0) {
-			dg_draw_arc_fill(points, r, -this._sa, -this._sa -this._ea , "rgba(0,100,0,0.2)", "#006400");
-		} else {
-			dg_draw_arc_fill(points, r, -this._sa , -this._sa -this._ea , "rgba(0,100,0,0.2)", "#006400");
-			
-		}
+		
+		dg_draw_arc_fill(points, r, -this._sa, -this._sa -this._ea , "rgba(0,100,0,0.2)", "#006400");
 		dg_draw_label(pc , this.deg().toFixed(0) + "°" , "#006400", "12px bold arial");
 	}
 	dg.geom.Vector = function(d) {
