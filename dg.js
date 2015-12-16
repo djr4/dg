@@ -890,12 +890,20 @@
 			var u = new dg.geom.Vector([this._p0.x() - this._p1.x(), this._p0.y() - this._p1.y()]);
 			var v = new dg.geom.Vector([this._p2.x() - this._p1.x(), this._p2.y() - this._p1.y()]);
 			this._angle = Math.acos( u.dot(v) /( u.norm() * v.norm() ) );
+
 			this._sint1 = u.cross(v) / ( u.norm() * v.norm() );
 			var u0 = new dg.geom.Vector([1, 0]);
 			this._sa = Math.acos(u.dot(u0) / (u.norm()*u0.norm())) - Math.acos( u.dot(v) /( u.norm() * v.norm() ) );
 			this._ea = Math.acos( u.dot(v) /( u.norm() * v.norm() ) );		
 			if(this._sint1 > 0) {
-				this._sa = Math.acos(u.dot(u0) / (u.norm() * u0.norm()));
+				this._sa = Math.acos(u.dot(u0) / (u.norm()*u0.norm()));
+			} 
+			if(u.cross(u0) > 0 && this._sint1 < 0) {
+				this._sa = -Math.acos(u.dot(u0) / (u.norm()*u0.norm())) - Math.acos( u.dot(v) /( u.norm() * v.norm() ) );
+			
+			} else if(u.cross(u0) > 0 && this._sint1 > 0) {
+				this._sa = -Math.acos(u.dot(u0) / (u.norm()*u0.norm()));
+				
 			}
 
 			var o = u.mul(1/u.norm()).add(v.mul(1/v.norm()));
@@ -926,16 +934,21 @@
 		this._intersection = intersection;
 		this._angle = Math.acos( u.dot(v) /( u.norm() * v.norm() ) );
 
-
 		this._sint1 = u.cross(v) / ( u.norm() * v.norm() );
 		var u0 = new dg.geom.Vector([1, 0]);
 		this._sa = Math.acos(u.dot(u0) / (u.norm()*u0.norm())) - Math.acos( u.dot(v) /( u.norm() * v.norm() ) );
 		this._ea = Math.acos( u.dot(v) /( u.norm() * v.norm() ) );		
 		if(this._sint1 > 0) {
 			this._sa = Math.acos(u.dot(u0) / (u.norm()*u0.norm()));
+		} 
+		if(u.cross(u0) > 0 && this._sint1 < 0) {
+			this._sa = -Math.acos(u.dot(u0) / (u.norm()*u0.norm())) - Math.acos( u.dot(v) /( u.norm() * v.norm() ) );
+		
+		} else if(u.cross(u0) > 0 && this._sint1 > 0) {
+			this._sa = -Math.acos(u.dot(u0) / (u.norm()*u0.norm()));
+			
 		}
 
-		
 		var o = u.mul(1/u.norm()).add(v.mul(1/v.norm()));
 		o = o.mul(.5);
 			
