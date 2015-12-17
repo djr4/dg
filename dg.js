@@ -295,7 +295,7 @@
 		var axes = new dg.axes.Axes(new dg.geom.Vector(o));
 		dg.axes.objects.push(axes);
 		dg_draw_axes();
-		return this;
+		return axes;
 	}
 	function dg_draw_axes() {
 		if(dg.axes.objects.length > 0) {
@@ -519,12 +519,19 @@
 		this._o = o;
 		this._xaxis = new dg.axes.Axis(o, [-4.3, 23.02], [0, dg_canvas_width]);
 		this._yaxis = new dg.axes.Axis(o, [-5.98, 6.3], [0, dg_canvas_height]);
+		this._hide = false; 
 		
 		return this;
 	}
-	dg.axes.Axes.prototype.draw = function() { 
-		this._xaxis.draw("x");
-		this._yaxis.draw("y");
+	dg.axes.Axes.prototype.hide = function(b) {
+		this._hide = b;
+		return this;
+	}
+	dg.axes.Axes.prototype.draw = function() {
+		if(!this._hide) {
+			this._xaxis.draw("x");
+			this._yaxis.draw("y");
+		}
 	}
 	
 	dg.geom = {}; 
@@ -1497,31 +1504,48 @@
 
 	dg.canvas.Canvas = function (elName, opts) {
 		if(dg_document.getElementById(elName) !== null) {
-			this.canvasElement = dg_document.getElementById(elName);
-			dg_canvas_element = this.canvasElement;
-			this.canvasWidth = dg_canvas_width = this.canvasElement.getAttribute("width");
-			this.canvasHeight = dg_canvas_height = this.canvasElement.getAttribute("height");
-			this.canvasContext = dg_canvas_context = this.canvasElement.getContext("2d");
+			this._ce = dg_document.getElementById(elName);
+			this._ce.width = opts.width;
+			this._ce.height = opts.height;
+
+			dg_canvas_element = this._ce;
+			this._cw = dg_canvas_width = this._ce.getAttribute("width");
+			this._ch = dg_canvas_height = this._ce.getAttribute("height");
+			this._cc = dg_canvas_context = this._ce.getContext("2d");
 			
 			dg_canvas_context.lineWidth = 1;
 			
 			if(opts.border)
-				this.canvasElement.style.border = opts.border;
+				this._ce.style.border = opts.border;
 	
-			this.canvasElement.style.cursor = "crosshair";
+			this._ce.style.cursor = "crosshair";
 			/* events */
-			this._events = new dg.event.Events(this.canvasElement);
+			this._events = new dg.event.Events(this._ce);
 		
-			return dg;
+			return this;
 		}
 	}
-	dg.canvas.Canvas.prototype.getContext = function() {
-		return this.canvasContext;
+	dg.canvas.Canvas.prototype.width = function() {
+		return this._cw;
 	}
-	dg.canvas.Canvas.prototype.getCanvas = function () { 
-		return this.canvasElement;
+	dg.canvas.Canvas.prototype.height = function() {
+		return this._ch;
 	}
-
+	dg.canvas.Canvas.prototype.canvasNode = function() {
+		return this._ce;
+	}
+	dg.Canvas = function() {
+		if(arguments.length > 1) {
+			if(!arguments[1].width && !arguments[1].height) {
+				arguments[1].width = 800;
+				arguments[1].height = 600;
+			}
+			var canvas = new dg.canvas.Canvas(arguments[0], arguments[1]);
+		} else {
+			var canvas = new dg.canvas.Canvas(arguments[0], { border: "none", width: 800, height: 600 });
+		}
+		return canvas;
+	}
 	/* dg events */
 	dg.event = {};
 	dg.event.Events = function(elem) {
@@ -1580,12 +1604,11 @@
 					//console.log("bingo! " + dg.geom.objects[i].label());
 					/* emp point! */
 					dg_draw_circle_fill(geom, 6, "#0000ff");
-					
+					dg_repaint();
 				}
 			}
 
 		}
-		
 		if(this._md == true && this._g) {
 			dg_canvas_element.style.cursor = "pointer";
 			/* clicked and point geometry selected */
@@ -1595,6 +1618,7 @@
 			this._g.y(gpos[1]);
 			/* recalculate dependent geom objects */
 			this._g._d.recalc();
+			dg_repaint();
 		} else if(this._md == true && !this._g) {
 			var apos = new dg.geom.Point(dg.geom.transform_inverse([this._pos.x, this._pos.y]));
 			var axes = dg.axes.objects[0];
@@ -1605,16 +1629,16 @@
 			axes._xaxis._o.y(axes._xaxis._o.y() + this._pos.y - dg.geom.transform(this._v.xy())[1]);
 			axes._yaxis._o.x(axes._xaxis._o.x() + this._pos.x - dg.geom.transform(this._v.xy())[0]);
 			axes._yaxis._o.y(axes._xaxis._o.y() + this._pos.y - dg.geom.transform(this._v.xy())[1]);
-			
+			dg_repaint();
 		}
 		
-		dg_repaint();		
+				
 	};
 	dg.event.Events.prototype.mouse_wheel = function(e) {
 		var d = dg_get_mouse_pos(e);
 		var p = new dg.geom.Vector([d.x - dg.axes.objects[0]._xaxis._o.x() , -(d.y - dg.axes.objects[0]._yaxis._o.y())]).mul(0.1);
 		var axes = dg.axes.objects[0];
-		dg_clear_canvas();
+
 		if(e.wheelDelta > 0) { 
 			axes._xaxis._cu *= 1.05;
 			axes._yaxis._cu *= 1.05;
@@ -1627,17 +1651,13 @@
 			axes._xaxis._o.x(axes._xaxis._o.x() + p.x() * .5);
 			axes._yaxis._o.y(axes._yaxis._o.y() - p.y() * .5);						
 		}
-		dg_clear_canvas();
-		axes._xaxis.draw("x");
-		axes._yaxis.draw("y");
-		
-		dg_draw_objects();		
+		dg_repaint();		
 	}
 	dg.event.Events.prototype.mouse_wheel_ff = function(e) {
 		var d = dg_get_mouse_pos(e);
 		var p = new dg.geom.Vector([d.x - dg.axes.objects[0]._xaxis._o.x() , -(d.y - dg.axes.objects[0]._yaxis._o.y())]).mul(0.1);
 		var axes = dg.axes.objects[0];
-		dg_clear_canvas();
+		
 		if(e.detail < 0) { 
 			axes._xaxis._cu *= 1.05;
 			axes._yaxis._cu *= 1.05;
@@ -1650,11 +1670,7 @@
 			axes._xaxis._o.x(axes._xaxis._o.x() + p.x() * .5);
 			axes._yaxis._o.y(axes._yaxis._o.y() - p.y() * .5);			
 		}
-		dg_clear_canvas();
-		axes._xaxis.draw("x");
-		axes._yaxis.draw("y");
-		
-		dg_draw_objects();				
+		dg_repaint();				
 	}
 	
 	function dg_clear_canvas() {
