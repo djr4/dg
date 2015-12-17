@@ -1085,6 +1085,7 @@
 			return this._x;
 		else {
 			this._x = arguments[0];
+			dg_repaint();
 			return this;
 		}
 	}
@@ -1093,6 +1094,7 @@
 			return this._y;
 		else {
 			this._y = arguments[0];
+			dg_repaint();
 			return this;
 		}
 	}

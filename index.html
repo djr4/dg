@@ -13,6 +13,39 @@
 		
 		var axes = g.Axes([250, 400]);
 
+		/* animation example  */
+		var p0 = g.Point([0,0]).label("O");
+		var p1 = g.Point([2,0]).label("P");
+		var c0 = g.Circle(p0, p1);
+		
+		var p2 = g.Point([2, 3]).label("O1");
+		var p3 = g.Point([3, 4]).label("Q");
+		var c1 = g.Circle(p2, p3);
+		
+		var p4 = g.Point([5, 1]).label("O2");
+		var p5 = g.Point([8, 1]).label("R");
+		var c2 = g.Circle(p4, p5);
+		
+		g.Polygon([p1, p3, p5]);
+		
+		var interval = setInterval(animate, 30);
+		var t = -Math.PI;
+		var step = 0.01;
+		function animate() {
+			var x1 = Math.cos(t) * 2;
+			var y1 = Math.sin(t) * 2;
+			var x2 = Math.cos(t) * Math.sqrt(2) + p2.x();
+			var y2 = Math.sin(t) * Math.sqrt(2) + p2.y();
+			var x3 = Math.cos(t) * 3 + p4.x();
+			var y3 = Math.sin(t) * 3 + p4.y();
+			
+			p1.x(x1).y(y1);
+			p3.x(x2).y(y2);
+			p5.x(x3).y(y3);
+			
+			t += step;
+		}
+		//p0.x(2).y(2);
 		/* intersections dependency test */
 		/*
 		var p1 = g.Point([1,1]).label("A");
@@ -46,7 +79,7 @@
 		var p = g.PerpendicularLine(p0 , new dg.geom.Line(new dg.geom.Point([0,0]), new dg.geom.Point([1,0])));
 		*/
 		/* line circle intersection test & angles */
-		
+		/*
 		var A = g.Point([-2, 7]).label("A");
 		var B = g.Point([2, 3]).label("B");
 		var l = g.Line(A, B);
@@ -54,13 +87,14 @@
 		var D = g.Point([3.2, 3]).label("D");
 		var c = g.Circle(C, D);
 		var intersection = g.Intersect(l, c);
-		var angle = g.Angle(A, C, D);
+		var angle = g.Angle(B, C, D);
+		
 		var p1 = g.Point([1,1]);
-		var p2 = g.Point([5,2]);
-		var p3 = g.Point([2, -3]);
+		var p2 = g.Point([2.2,2]);
+		var p3 = g.Point([1, -1]);
 		g.Angle(p1,p2,p3);
 		//g.Angle(A,C,B);
-		
+		*/
 		/* events testing */
 		/* midpoint, parallel and perpendicular line dependency */
 		/*
