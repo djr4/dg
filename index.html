@@ -6,28 +6,28 @@
 	<script type="text/javascript" src="dg.js" ></script>
 </head>
 <body>
-	<canvas id="testcanvas" width="800" height="600"></canvas>
+	<canvas id="testcanvas"></canvas>
 	<script type="text/javascript">
 
-		var g = new dg.canvas.Canvas("testcanvas",{ border: "1px solid #ccc"});
-		
-		var axes = g.Axes([250, 400]);
+		var canvas = dg.Canvas("testcanvas", { border: "1px solid #ccc"});
 
+		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
+		
 		/* animation example  */
 		/*
-		var p0 = g.Point([0,0]).label("O");
-		var p1 = g.Point([2,0]).label("P");
-		var c0 = g.Circle(p0, p1);
+		var p0 = dg.Point([0,0]).label("O");
+		var p1 = dg.Point([2,0]).label("P");
+		var c0 = dg.Circle(p0, p1);
 		
-		var p2 = g.Point([2, 3]).label("O1");
-		var p3 = g.Point([3, 4]).label("Q");
-		var c1 = g.Circle(p2, p3);
+		var p2 = dg.Point([2, 3]).label("O1");
+		var p3 = dg.Point([3, 4]).label("Q");
+		var c1 = dg.Circle(p2, p3);
 		
-		var p4 = g.Point([5, 1]).label("O2");
-		var p5 = g.Point([8, 1]).label("R");
-		var c2 = g.Circle(p4, p5);
+		var p4 = dg.Point([5, 1]).label("O2");
+		var p5 = dg.Point([8, 1]).label("R");
+		var c2 = dg.Circle(p4, p5);
 		
-		g.Polygon([p1, p3, p5]);
+		dg.Polygon([p1, p3, p5]);
 		
 		var interval = setInterval(animate, 30);
 		var t = -Math.PI;
@@ -48,162 +48,162 @@
 		}
 		*/
 		/* intersections dependency test */
-		/*
-		var p1 = g.Point([1,1]).label("A");
-		var p2 = g.Point([5,2]).label("B");
-		l0 = g.Line(p1, p2);
-		var p3 = g.Point([7,7]).label("C");
-		var p4 = g.Point([1,-2]).label("D");
-		var l1 = g.Line(p3, p4);
-		var intersection = g.Intersect(l0, l1);
-		var pl = g.PerpendicularLine(intersection, l0);
-		var o = g.Circle(intersection, p2);
-		*/
+		
+		var p1 = dg.Point([1,1]).label("A");
+		var p2 = dg.Point([5,2]).label("B");
+		l0 = dg.Line(p1, p2);
+		var p3 = dg.Point([7,7]).label("C");
+		var p4 = dg.Point([1,-2]).label("D");
+		var l1 = dg.Line(p3, p4);
+		var intersection = dg.Intersect(l0, l1);
+		var pl = dg.PerpendicularLine(intersection, l0);
+		var o = dg.Circle(intersection, p2);
+		
 		/* tangent line dependency test */
 		/*
-		var p1 = g.Point([1, 1]).label("A");
-		var p2 = g.Point([4, 2]).label("B");		
-		var c = g.Circle(p1,p2);
-		var p3 = g.Point([8, 3]).label("C");
-		var poly = g.Polygon([p1,p2,p3]);
-		var t = g.Tangent(p3, c);
-		g.Line(p3, p1);
+		var p1 = dg.Point([1, 1]).label("A");
+		var p2 = dg.Point([4, 2]).label("B");		
+		var c = dg.Circle(p1,p2);
+		var p3 = dg.Point([8, 3]).label("C");
+		var poly = dg.Polygon([p1,p2,p3]);
+		var t = dg.Tangent(p3, c);
+		dg.Line(p3, p1);
 		*/
 		/* functions */
 		/*
-		var f = g.Function(function(x) { return x*x; }, "#ff0000");
-		var f1 = g.Function(function(x) { return Math.cos(x); }, "#00ff00");
-		var i1 = dg.Intersect(f, f1);
-		var f2 = g.Function(function(x) { return 0; });
-		var i3 = g.Intersect(f1, f2, [-30, 30]);
-		var p0 = g.Point([Math.PI, Math.cos(Math.PI)]);
-		var p = g.PerpendicularLine(p0 , new dg.geom.Line(new dg.geom.Point([0,0]), new dg.geom.Point([1,0])));
+		var f = dg.Function(function(x) { return x*x; }, "#ff0000");
+		var f1 = dg.Function(function(x) { return Math.cos(x); }, "#00ff00");
+		var i1 = ddg.Intersect(f, f1);
+		var f2 = dg.Function(function(x) { return 0; });
+		var i3 = dg.Intersect(f1, f2, [-30, 30]);
+		var p0 = dg.Point([Math.PI, Math.cos(Math.PI)]);
+		var p = dg.PerpendicularLine(p0 , new dg.geom.Line(new dg.geom.Point([0,0]), new dg.geom.Point([1,0])));
 		*/
 		/* line circle intersection test & angles */
 		/*
-		var A = g.Point([-2, 7]).label("A");
-		var B = g.Point([2, 3]).label("B");
-		var l = g.Line(A, B);
-		var C = g.Point([3, 2]).label("C");
-		var D = g.Point([3.2, 3]).label("D");
-		var c = g.Circle(C, D);
-		var intersection = g.Intersect(l, c);
-		var angle = g.Angle(B, C, D);
+		var A = dg.Point([-2, 7]).label("A");
+		var B = dg.Point([2, 3]).label("B");
+		var l = dg.Line(A, B);
+		var C = dg.Point([3, 2]).label("C");
+		var D = dg.Point([3.2, 3]).label("D");
+		var c = dg.Circle(C, D);
+		var intersection = dg.Intersect(l, c);
+		var angle = dg.Angle(B, C, D);
 		*/
-		//var p1 = g.Point([1,1]);
-		//var p2 = g.Point([2.2,2]);
-		//var p3 = g.Point([1, -1]);
-		//g.Angle(p1,p2,p3);
-		//g.Angle(A,C,B);
+		//var p1 = dg.Point([1,1]);
+		//var p2 = dg.Point([2.2,2]);
+		//var p3 = dg.Point([1, -1]);
+		//dg.Angle(p1,p2,p3);
+		//dg.Angle(A,C,B);
 		
 		/* events testing */
 		/* midpoint, parallel and perpendicular line dependency */
 		/*
-		var p1 = g.Point([1, 1]).label("A");
+		var p1 = dg.Point([1, 1]).label("A");
 		console.log(p1);
-		var p2 = g.Point([4, 2]).label("B");
-		var l = g.Line(p1,p2);
-		var m = g.Midpoint(p1,p2);
-		var pl = g.PerpendicularLine(m, l);
-		var p3 = g.Point([0, 3]);
-		var prl = g.ParallelLine(p3, pl);
-		g.PerpendicularLine(p3, prl);
+		var p2 = dg.Point([4, 2]).label("B");
+		var l = dg.Line(p1,p2);
+		var m = dg.Midpoint(p1,p2);
+		var pl = dg.PerpendicularLine(m, l);
+		var p3 = dg.Point([0, 3]);
+		var prl = dg.ParallelLine(p3, pl);
+		dg.PerpendicularLine(p3, prl);
 		*/
 		/* circumcenter */
 		/*
-		var p1 = g.Point([1, 1]).label("A");
-		var p2 = g.Point([4, 5]).label("B");
-		var p3 = g.Point([7,2]).label("C");
-		var c = g.Segment(p1, p2);
-		var b = g.Segment(p2, p3);
-		var a = g.Segment(p3, p1);
-		var pa = g.PerpendicularBisector(a);
-		var pb = g.PerpendicularBisector(b);
-		var pc = g.PerpendicularBisector(c);
-		var o = g.Intersect(pa, pb);
-		var circle = g.Circle(o, p1);
+		var p1 = dg.Point([1, 1]).label("A");
+		var p2 = dg.Point([4, 5]).label("B");
+		var p3 = dg.Point([7,2]).label("C");
+		var c = dg.Segment(p1, p2);
+		var b = dg.Segment(p2, p3);
+		var a = dg.Segment(p3, p1);
+		var pa = dg.PerpendicularBisector(a);
+		var pb = dg.PerpendicularBisector(b);
+		var pc = dg.PerpendicularBisector(c);
+		var o = dg.Intersect(pa, pb);
+		var circle = dg.Circle(o, p1);
 		*/
 		/* inscribed circle */
 		/*
-		var p1 = g.Point([-1, -1]).label("A");
-		var p2 = g.Point([5, 2]).label("B");
-		var p3 = g.Point([7,-3]).label("C");
-		var c = g.Segment(p1, p2);
-		var b = g.Segment(p2, p3);
-		var a = g.Segment(p3, p1);
-		var sa = g.AngleBisector(p2,p1,p3);
-		var sb = g.AngleBisector(p3,p2,p1);
-		var sc = g.AngleBisector(p1,p3,p2);
-		var o = g.Intersect(sa,sb);
-		var pl = g.PerpendicularLine(o, b);
-		var r = g.Intersect(pl, b);
-		var incircle = g.Circle(o, r);
+		var p1 = dg.Point([-1, -1]).label("A");
+		var p2 = dg.Point([5, 2]).label("B");
+		var p3 = dg.Point([7,-3]).label("C");
+		var c = dg.Segment(p1, p2);
+		var b = dg.Segment(p2, p3);
+		var a = dg.Segment(p3, p1);
+		var sa = dg.AngleBisector(p2,p1,p3);
+		var sb = dg.AngleBisector(p3,p2,p1);
+		var sc = dg.AngleBisector(p1,p3,p2);
+		var o = dg.Intersect(sa,sb);
+		var pl = dg.PerpendicularLine(o, b);
+		var r = dg.Intersect(pl, b);
+		var incircle = dg.Circle(o, r);
 		*/
 		/* orthocenter */
 		/*
-		var p1 = g.Point([1, 1]).label("A");
-		var p2 = g.Point([4, 5]).label("B");
-		var p3 = g.Point([7,2]).label("C");
-		var c = g.Segment(p1, p2);
-		var b = g.Segment(p2, p3);
-		var a = g.Segment(p3, p1);
-		var pa = g.PerpendicularLine(p1, b);
-		var pb = g.PerpendicularLine(p2, a);
-		var pc = g.PerpendicularLine(p3, c);
-		var o = g.Intersect(pa, pb);
+		var p1 = dg.Point([1, 1]).label("A");
+		var p2 = dg.Point([4, 5]).label("B");
+		var p3 = dg.Point([7,2]).label("C");
+		var c = dg.Segment(p1, p2);
+		var b = dg.Segment(p2, p3);
+		var a = dg.Segment(p3, p1);
+		var pa = dg.PerpendicularLine(p1, b);
+		var pb = dg.PerpendicularLine(p2, a);
+		var pc = dg.PerpendicularLine(p3, c);
+		var o = dg.Intersect(pa, pb);
 		*/
 		/* regular polygon dependency */
 		/*
-		var p1 = g.Point([3, 1]);
-		var p2 = g.Point([5, 2]);
-		var poly = g.Polygon([p1, p2], 6);
-		var pl = g.PerpendicularBisector(new dg.geom.Segment(p1,p2));
+		var p1 = dg.Point([3, 1]);
+		var p2 = dg.Point([5, 2]);
+		var poly = dg.Polygon([p1, p2], 6);
+		var pl = dg.PerpendicularBisector(new dg.geom.Segment(p1,p2));
 		*/
 		
 		/* construction of tangents from point */
 		/*
-		var p1 = g.Point([1, 1]).label("O");
-		var p2 = g.Point([4, 2]).label("B");		
-		var c0 = g.Circle(p1,p2);
-		var p3 = g.Point([8, 3]).label("P");
-		var midpoint = g.Midpoint(p1, p3).label("M");
-		var c1 = g.Circle(midpoint, p3);
-		g.Line(p3, p1);
-		var intersections = g.Intersect(c0, c1);
-		g.Line(p3, intersections[0]);
-		g.Line(p3, intersections[1]);
+		var p1 = dg.Point([1, 1]).label("O");
+		var p2 = dg.Point([4, 2]).label("B");		
+		var c0 = dg.Circle(p1,p2);
+		var p3 = dg.Point([8, 3]).label("P");
+		var midpoint = dg.Midpoint(p1, p3).label("M");
+		var c1 = dg.Circle(midpoint, p3);
+		dg.Line(p3, p1);
+		var intersections = dg.Intersect(c0, c1);
+		dg.Line(p3, intersections[0]);
+		dg.Line(p3, intersections[1]);
 		*/
 		
 		
 		/*
-		var p1 = g.Point([-1, -1]).label("A");
-		var p2 = g.Point([5, 2]).label("B");		
-		var p3 = g.Point([3, 1]).label("C");
-		var p4 = g.Point([-2, 1]).label("D");
-		var p5 = g.Point([-2, -1]).label("E");
-		var p1_p2 = g.Midpoint(p1, p2).label("M'");
-		var a = g.Line(p1, p2);
-		var s = g.Segment(p1, p3);
-		g.Midpoint(s).label("M''");
-		var c = g.Circle(p1, p3);
-		g.Circle(p4, p5);
-		g.Polygon([p3, p2, p4, p5]);
-		var p6 = g.Point([5,1]).label("F");
-		var p7 = g.Point([7, 1]).label("G");
-		g.Polygon([p6, p7], 6);
-		var p8 = g.Point([-1,-1]).label("H");
-		var p9 = g.Point([-1,-2]).label("I");
-		g.Polygon([p8, p9], 5);
-		g.Polygon([g.Point([1,4]), g.Point([0,4])], 7);
-		var c = g.PerpendicularLine(p6, a);
-		var p10 = g.Point([2, -1]).label("J");
-		var p11 = g.Point([3, -1]).label("K");
-		var b = g.Segment(p10, p11);
-		g.PerpendicularBisector(b);
-		g.PerpendicularLine(p11, b);
-		g.ParallelLine(p6, a);
-		g.Angle(p11, p6, p3);
-		g.AngleBisector(p3, p2, p1);
+		var p1 = dg.Point([-1, -1]).label("A");
+		var p2 = dg.Point([5, 2]).label("B");		
+		var p3 = dg.Point([3, 1]).label("C");
+		var p4 = dg.Point([-2, 1]).label("D");
+		var p5 = dg.Point([-2, -1]).label("E");
+		var p1_p2 = dg.Midpoint(p1, p2).label("M'");
+		var a = dg.Line(p1, p2);
+		var s = dg.Segment(p1, p3);
+		dg.Midpoint(s).label("M''");
+		var c = dg.Circle(p1, p3);
+		dg.Circle(p4, p5);
+		dg.Polygon([p3, p2, p4, p5]);
+		var p6 = dg.Point([5,1]).label("F");
+		var p7 = dg.Point([7, 1]).label("G");
+		dg.Polygon([p6, p7], 6);
+		var p8 = dg.Point([-1,-1]).label("H");
+		var p9 = dg.Point([-1,-2]).label("I");
+		dg.Polygon([p8, p9], 5);
+		dg.Polygon([dg.Point([1,4]), dg.Point([0,4])], 7);
+		var c = dg.PerpendicularLine(p6, a);
+		var p10 = dg.Point([2, -1]).label("J");
+		var p11 = dg.Point([3, -1]).label("K");
+		var b = dg.Segment(p10, p11);
+		dg.PerpendicularBisector(b);
+		dg.PerpendicularLine(p11, b);
+		dg.ParallelLine(p6, a);
+		dg.Angle(p11, p6, p3);
+		dg.AngleBisector(p3, p2, p1);
 		*/
 		
 	</script>
