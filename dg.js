@@ -1,5 +1,5 @@
 /* 
-	dynamic geometry v1.0.1 (dg.js)
+	dynamic geometry v1.0.0 (dg.js)
 	Djordje Rakonjac
 		rakonjac.djordje@gmail.com
 	Mentor: Filip Maric
@@ -10,7 +10,7 @@
 !function() {
  
 	var dg = {
-		version: "1.0.1"
+		version: "1.0.0"
 	};
 	
 	var dg_document = this.document;
@@ -27,7 +27,6 @@
 	function dg_abs(x) {
 		return x >= 0 ? x : -x;
 	}
-	/* min, max */
 	function dg_max(d) {
 		var max = d[0];
 		for(var i = 1; i < d.length; i++)
@@ -48,21 +47,12 @@
 		
 		return [ x * Math.cos(theta) - y * Math.sin(theta), x * Math.sin(theta) + y * Math.cos(theta)];
 	}
-	dg.abs = dg_abs;
-	dg.max = dg_max;
-	dg.min = dg_min;
-
-	
 	function dg_square(d) {
 		for(var i = 0 ; i < d.length; i++) {
 			d[i] = d[i] * d[i];
 		}
 		return d;
 	}
-	
-	dg.rotate = dg_rotate;
-	dg.square = dg_square;
-		
 	function dg_centroid(d) {
 		/* d - array of Points */
 		var p0 = 0;
@@ -73,6 +63,11 @@
 		}
 		return new dg.geom.Point([p0 / d.length, p1 / d.length]);
 	}
+	dg.abs = dg_abs;
+	dg.max = dg_max;
+	dg.min = dg_min;
+	dg.rotate = dg_rotate;
+	dg.square = dg_square;
 	dg.centroid = dg_centroid;
 	
 	function dg_intersect_circles(c0, c1) {
@@ -1085,7 +1080,6 @@
 			return this._x;
 		else {
 			this._x = arguments[0];
-			dg_repaint();
 			return this;
 		}
 	}
@@ -1094,11 +1088,19 @@
 			return this._y;
 		else {
 			this._y = arguments[0];
-			dg_repaint();
 			return this;
 		}
 	}
-	
+	dg.geom.Point.prototype.setX = function(x) {
+		this._x = x;
+		dg_repaint();
+		return this;
+	}
+	dg.geom.Point.prototype.setY = function(y) {
+		this._y = y;
+		dg_repaint();
+		return this;
+	}
 	dg.geom.Point.prototype.label = function() {
 		if(arguments.length === 0)
 			return this._label;
