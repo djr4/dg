@@ -1062,7 +1062,7 @@
 		return [ this._x, this._y ];
 	}
 	dg.geom.Point.prototype.draw = function() {
-		/* faster?  */
+		
 		if(this._d.length() > 0) {
 			for(var i = 0; i < this._d.length(); i++)
 				this._d.get(i).recalc();
@@ -1631,14 +1631,13 @@
 			axes._yaxis._o.y(axes._xaxis._o.y() + this._pos.y - dg.geom.transform(this._v.xy())[1]);
 			dg_repaint();
 		}
-		
 				
 	};
 	dg.event.Events.prototype.mouse_wheel = function(e) {
 		var d = dg_get_mouse_pos(e);
 		var p = new dg.geom.Vector([d.x - dg.axes.objects[0]._xaxis._o.x() , -(d.y - dg.axes.objects[0]._yaxis._o.y())]).mul(0.1);
 		var axes = dg.axes.objects[0];
-
+		
 		if(e.wheelDelta > 0) { 
 			axes._xaxis._cu *= 1.05;
 			axes._yaxis._cu *= 1.05;
@@ -1651,7 +1650,8 @@
 			axes._xaxis._o.x(axes._xaxis._o.x() + p.x() * .5);
 			axes._yaxis._o.y(axes._yaxis._o.y() - p.y() * .5);						
 		}
-		dg_repaint();		
+		dg_clear_canvas();
+		dg_repaint();	
 	}
 	dg.event.Events.prototype.mouse_wheel_ff = function(e) {
 		var d = dg_get_mouse_pos(e);
@@ -1670,7 +1670,8 @@
 			axes._xaxis._o.x(axes._xaxis._o.x() + p.x() * .5);
 			axes._yaxis._o.y(axes._yaxis._o.y() - p.y() * .5);			
 		}
-		dg_repaint();				
+		dg_clear_canvas();
+		dg_repaint();
 	}
 	
 	function dg_clear_canvas() {
