@@ -1,10 +1,10 @@
 # dg.js
-**dg.js** is javascript library for dynamic geometry. **DG** helps you to explore relationship between 
-geometry objects and provides easy way to draw objects on canvas. 
+**dg.js** is javascript library for dynamic geometry. **DG** helps you visualize and explore relationship between 
+geometry objects in intuitve and interactive way.
 
 # Resources
 
-- [Examples](http://)
+- [Examples](http://alas.matf.bg.ac.rs/~mi09109/)
 
 # API Reference
 
@@ -21,7 +21,7 @@ Return Value: reference to created point.
 
 Methods:
 
-	`x(?number n)`  gets/sets x coordinate **not to be used in animation**
+`x(?number n)` gets/sets x coordinate **not to be used in animation**
 	
 	`y(?number n)`  gets/sets y coordinate **not to be used in animation**
 	
