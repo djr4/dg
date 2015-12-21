@@ -1201,7 +1201,7 @@
 		this._p0 = p0;
 		this._p1 = p1;
 		this._type = 4;
-
+		this._color = "#202020";
 		return this;
 	}
 	dg.geom.Line.prototype.p0 = function() { 
@@ -1210,13 +1210,18 @@
 	dg.geom.Line.prototype.p1 = function() {
 		return this._p1;
 	}
+	dg.geom.Line.prototype.color = function(c) {
+		this._color = c;
+		dg_repaint();
+		return this;
+	}
 	dg.geom.Line.prototype.recalc = function() {}
 
 	dg.geom.Line.prototype.draw = function() { 
 		var p0 = dg.geom.transform([this._p0.x(), this._p0.y()]);
 		var p1 = dg.geom.transform([this._p1.x(), this._p1.y()]);
 
-		dg_draw_line(p0, p1, "#202020");
+		dg_draw_line(p0, p1, this._color);
 	}
 	
 	dg.geom.PerpendicularLine = function(p, l) {
@@ -1360,6 +1365,7 @@
 		this._p1 = p1;
 		this._r = this._p0.dist(this._p1);
 		this._type = 10;
+		this._color = "#202020";
 		
 		this._p0._d.push(this);
 		this._p1._d.push(this);
@@ -1375,12 +1381,16 @@
 				this._d.get(i).recalc();
 		}	
 	}
-	
+	dg.geom.Circle.prototype.color = function(c) {
+		this._color = c;
+		dg_repaint();
+		return this;		
+	}
 	dg.geom.Circle.prototype.draw = function() { 
 		var p = dg.geom.transform([this._p0.x(), this._p0.y()]);
 		var r = dg.geom.transform_scalar(this._r);
 		
-		dg_draw_circle(p, r, "#202020");
+		dg_draw_circle(p, r, this._color);
 	}
 	
 	dg.geom.Tangent = function(p, c) {
@@ -1456,7 +1466,19 @@
 			
 		}
 		this._type = 12;
+		this._color = "rgba(255,0,0,0.2)";
+		this._stroke = "#993300";
 		
+		return this;
+	}
+	dg.geom.Polygon.prototype.color = function(c) {
+		this._color = c;
+		dg_repaint();
+		return this;
+	}
+	dg.geom.Polygon.prototype.stroke = function(c) {
+		this._stroke = c;
+		dg_repaint();
 		return this;
 	}
 	dg.geom.Polygon.prototype.recalc = function() { 
@@ -1484,7 +1506,7 @@
 			p.push(dg.geom.transform([this._points[i].x(), this._points[i].y()]));
 		}
 			
-		dg_draw_polygon(p, "#993300", "rgba(255,0,0,0.2)");
+		dg_draw_polygon(p, this._stroke, this._color);
 
 	}
 	
@@ -1502,6 +1524,11 @@
 		}
 		this._step = 0.01;
 		this._type = 13;
+		return this;
+	}
+	dg.f.Function.prototype.color = function(c) {
+		this._style = c;
+		dg_repaint();
 		return this;
 	}
 	dg.f.Function.prototype.f = function(x) {
