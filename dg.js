@@ -1183,6 +1183,12 @@
 
 		return this;
 	}
+	dg.geom.Line.prototype.p0 = function() { 
+		return this._p0;
+	}
+	dg.geom.Line.prototype.p1 = function() {
+		return this._p1;
+	}
 	dg.geom.Line.prototype.recalc = function() {}
 
 	dg.geom.Line.prototype.draw = function() { 

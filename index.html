@@ -36,8 +36,8 @@
 			
 			for(var i = 0; i < n; i++) {
 				
-				lines[i]._p1.setX(r * Math.cos(step + i * t) + o.x());
-				lines[i]._p1.setY(r * Math.sin(step + i * t) + o.y());
+				lines[i].p1().setX(r * Math.cos(step + i * t) + o.x());
+				lines[i].p1().setY(r * Math.sin(step + i * t) + o.y());
 			}
 			step -= 0.01;
 		}
