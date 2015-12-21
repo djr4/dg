@@ -1181,13 +1181,25 @@
 		this._p0 = p0;
 		this._p1 = p1;
 		this._type = 5;
+		this._color = "#202020";
 		
+		return this;
+	}
+	dg.geom.Segment.prototype.p0 = function() { 
+		return this._p0;
+	}
+	dg.geom.Segment.prototype.p1 = function() {
+		return this._p1;
+	}
+	dg.geom.Segment.prototype.color = function(c) {
+		this._color = c;
+		dg_repaint();
 		return this;
 	}
 	dg.geom.Segment.prototype.recalc = function() {}
 	
 	dg.geom.Segment.prototype.draw = function() { 
-		var c = "#202020";
+		var c = this._color;
 		if(arguments.length > 0)
 			c = arguments[0];
 		var p0 = dg.geom.transform([this._p0.x(), this._p0.y()]);

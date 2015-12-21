@@ -135,17 +135,17 @@
 		
 		/* events testing */
 		/* midpoint, parallel and perpendicular line dependency */
-		/*
+		
 		var p1 = dg.Point([1, 1]).label("A");
 		console.log(p1);
 		var p2 = dg.Point([4, 2]).label("B");
 		var l = dg.Line(p1,p2);
-		var m = dg.Midpoint(p1,p2);
-		var pl = dg.PerpendicularLine(m, l);
+		var m = dg.Midpoint(p1,p2).label("M").color("#ff0000").size(7);
+		var pl = dg.PerpendicularLine(m, l).color("#fef222");
 		var p3 = dg.Point([0, 3]);
 		var prl = dg.ParallelLine(p3, pl);
 		dg.PerpendicularLine(p3, prl);
-		*/
+		
 		/* circumcenter */
 		/*
 		var p1 = dg.Point([1, 1]).label("A");
