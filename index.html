@@ -13,10 +13,16 @@
 
 		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
 		
-		/* weel simulation */
+		/* point styles */
 		/*
+		var p1 = dg.Point([1,1]).label("P").color("#00ff00");
+		var p2 = dg.Point([2,2]).label("F").size(8);
+		dg.Line(p1 , p2);
+		*/
+		/* weel simulation */
+		
 		var r = 3;
-		var o = dg.Point([3,3]).label("O");
+		var o = dg.Point([3,3]).label("O").color("rgb(255, 0, 0)").size(10);
 		var p = dg.Point([3, 0]).label("P");
 		var c = dg.Circle(o,p);
 		
@@ -25,7 +31,11 @@
 		var k = -Math.PI;
 		var lines = [];
 		for(var i = 0; i < n; i++) {
+			var red = Math.floor(Math.random() * 255);
+			var green = Math.floor(Math.random() * 255);
+			var blue = Math.floor(Math.random() * 255);
 			lines.push(dg.Line(o, dg.Point([r * Math.cos(k) + o.x(), r * Math.sin(k) + o.y() ])));
+			lines[i].p1().color("rgb(" + red + "," + green + "," + blue + ")");
 			k = t * i;
 		}
 		
@@ -41,7 +51,7 @@
 			}
 			step -= 0.01;
 		}
-		*/
+		
 		/* animation example  */
 		/*
 		var p0 = dg.Point([0,0]).label("O");

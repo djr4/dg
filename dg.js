@@ -1047,12 +1047,25 @@
 		this._type = 1;
 		this._label = "A" + dg_count_objects(1);
 		this._free = 1;
+		this._color = "#0000ff";
+		this._size = 4; 
 		this._d = new dg.geom.Dependency();
 		return this;
 	}
-
+	dg.geom.Point.prototype.color = function(c) {
+		this._color = c;
+		dg_repaint();
+		return this;
+	}
+	dg.geom.Point.prototype.size = function(s) {
+		this._size = s;
+		dg_repaint();
+		return this;
+	}
 	dg.geom.Point.prototype.free = function(f) {
 		this._free = f;
+		dg_repaint();
+		return this;
 	}
 	
 	dg.geom.Point.prototype.dist = function(p) {
@@ -1068,19 +1081,19 @@
 				this._d.get(i).recalc();
 		}
 		if(this._free == false)
-			dg_canvas_context.fillStyle="#444444";
+			dg_canvas_context.fillStyle = "#444444";
 		else
-			dg_canvas_context.fillStyle="#0000ff";
+			dg_canvas_context.fillStyle = this._color;
 		dg_canvas_context.strokeStyle = "#202020";
 		dg_canvas_context.beginPath();
 		var p = dg.geom.transform([this._x, this._y]);
-		dg_canvas_context.arc(p[0], p[1], 4, 0, 2 * Math.PI, true);
+		dg_canvas_context.arc(p[0], p[1], this._size, 0, 2 * Math.PI, true);
 		dg_canvas_context.lineWidth = 1;
 		dg_canvas_context.fill();
 		dg_canvas_context.stroke();
 		
 		dg_canvas_context.font = "12px lighter arial";
-		dg_canvas_context.fillText(this._label, p[0] + 12, p[1] - 12);
+		dg_canvas_context.fillText(this._label, p[0] + this._size + 8, p[1] - 8 - this._size);
 	}
 	dg.geom.Point.prototype.x = function() {
 		if(arguments.length === 0)
@@ -1606,10 +1619,10 @@
 			/* emp on points */
 			if(dg.geom.objects[i]._type == 1 && dg.geom.objects[i]._free == true) {
 				var geom = dg.geom.transform(dg.geom.objects[i].xy());
-				if(new dg.geom.Point(geom).dist(new dg.geom.Point([pos.x, pos.y])) < 15) {
+				if(new dg.geom.Point(geom).dist(new dg.geom.Point([pos.x, pos.y])) < 11 + dg.geom.objects[i]._size) {
 					//console.log("bingo! " + dg.geom.objects[i].label());
 					/* emp point! */
-					dg_draw_circle_fill(geom, 6, "#0000ff");
+					dg_draw_circle_fill(geom, 2 + dg.geom.objects[i]._size, dg.geom.objects[i]._color);
 					dg_repaint();
 				}
 			}
