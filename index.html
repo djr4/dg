@@ -13,6 +13,35 @@
 
 		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
 		
+		/* weel simulation */
+		/*
+		var r = 3;
+		var o = dg.Point([3,3]).label("O");
+		var p = dg.Point([3, 0]).label("P");
+		var c = dg.Circle(o,p);
+		
+		var n = 8;
+		var t = 2 * Math.PI / n;
+		var k = -Math.PI;
+		var lines = [];
+		for(var i = 0; i < n; i++) {
+			lines.push(dg.Line(o, dg.Point([r * Math.cos(k) + o.x(), r * Math.sin(k) + o.y() ])));
+			k = t * i;
+		}
+		
+		var interval = setInterval(animate, 30);
+		k = -Math.PI;
+		var step = 0.01;
+		function animate() {
+			
+			for(var i = 0; i < n; i++) {
+				
+				lines[i]._p1.setX(r * Math.cos(step + i * t) + o.x());
+				lines[i]._p1.setY(r * Math.sin(step + i * t) + o.y());
+			}
+			step -= 0.01;
+		}
+		*/
 		/* animation example  */
 		/*
 		var p0 = dg.Point([0,0]).label("O");
@@ -48,7 +77,7 @@
 		}
 		*/
 		/* intersections dependency test */
-		
+		/*
 		var p1 = dg.Point([1,1]).label("A");
 		var p2 = dg.Point([5,2]).label("B");
 		l0 = dg.Line(p1, p2);
@@ -58,7 +87,7 @@
 		var intersection = dg.Intersect(l0, l1);
 		var pl = dg.PerpendicularLine(intersection, l0);
 		var o = dg.Circle(intersection, p2);
-		
+		*/
 		/* tangent line dependency test */
 		/*
 		var p1 = dg.Point([1, 1]).label("A");
