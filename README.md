@@ -32,7 +32,17 @@ Canvas creation example: `dg.Canvas("testcanvas", { border: '1px solid #ccc;' })
 `height()` gets canvas height in pixels
 * Return Value: `number`
 
-## dg.Axes
+## dg.axes namespace
+
+Constructor: `dg.Axes(Vector v)`
+* Return Value: `Axes`
+* Example: `dg.Axes([ canvas.width() / 4, canvas.height()/ 1.5 ]).hide(false);`
+
+_canvas_ is reference to created canvas before calling `dg.Axes` constructor!
+
+`dg.Axes([ **250** , **300** ])`, 200 & 300 represent **begining** of _cartesian plane_ in pixels.
+
+see `dg.geom.Vector` class under helping classes & functions. 
 
 ## dg.event namespace
 
@@ -63,11 +73,24 @@ _note that `function` refers to **javascript** function & `Function` refers to `
 `step(number s)` precision of function drawing (careful if you use `dg.Intersect` on functions)
 * Return Value: `Function`
 
-`setF(function f)` set function to f
+`setF(function f)` set function to f (use for animation, _calls `dg_repaint()`_)
 * Return Value: `Function`
 * Example: `dg.Function( function(x) { return 0; } ).setF( function(y) { return Math.sin(y); } );`
 
 ## dg.geom namespace
+
+#### dg.geom.Angle class
+
+`dg.Angle` draws angle between 3 points on canvas. ** Angles are calculated and drawn up to PI radians or 180 degrees.**
+ 
+Constructor: `dg.Angle(Point p0, Point p1, Point p2)`
+* Return Value: `Angle`
+
+###### Methods
+
+`deg()` returns created angle in degrees
+* Return Value: `number`
+* Example: `dg.Angle(p0, p1, p2).deg();`
 
 #### dg.geom.Point class
 
@@ -223,7 +246,59 @@ Constructor: `Polygon([Point p0, Point p1 (?,number n)])`
 `stroke(String s)` sets poly stroke color
 * Return Value: `Polygon`
 
+## Helping classes & functions 
 
+In this library `dg.geom.Vector` class turned out to be helping class to do various calculations.
+Vector class does lots of calculations regarding _2d_ vectors.
+
+Constructor: `dg.geom.Vector([number p, number q])`
+
+###### Methods
+
+`str()` returns nice string representation of a vector. _For debugging__.
+
+`translate(Vector v)` translates vector position by `Vector` v.
+
+`dot(Vector v)` returns vector dot products of current vector & vector v.
+
+`norm()` returns norm of a vector.
+
+`add(Vector v)` adds with current vector and returns a new vector, _imutable_.
+
+`mul(number t)` scalar multiplication of a vector. 
+
+`label(?string s) gets/sets vector label. 
+
+`xy()` returns vector coordinates as an array.
+
+`x()` returns x coordinate of a vector.
+
+`y()` returns y coordinate of a vector.
+
+#### helping functions
+
+`dg.geom.transform` & `dg.geom.transform_inverse` are used as mapping functions from canvas to created coordinate system & vice versa.
+
+`dg.geom.transform` returns array of coordinates on canvas in **pixels**.
+
+`dg.geom.transform_inverse` returns array of coordinates in our **plane**. 
+
+`dg.geom.transform_scalar(s)` returns scalar in canvas pixels.
+
+`dg.abs(x)` returns absolute value of x. 
+
+`dg.max(array d)` returns max value of **array** d.
+
+`dg.min(array d)` returns min value of **array** d.
+
+`dg.rotate(array d, number theta)` returns array of coordinates rotated by angle _theta_
+
+`dg.square(array d)` returns squared array.
+
+`dg.centroid(array[Points]) returns centroid `Point` of an array of _points_.
+
+`dg.color.rand()` returns random color as string in rgb format. 
+* Output example: `rgb(241,124,252)` 
 ### Geometry type ids
 - 1 point
 - 2 vector,
