@@ -40,7 +40,7 @@ Constructor: `dg.Axes(Vector v)`
 
 _canvas_ is reference to created canvas before calling `dg.Axes` constructor!
 
-`dg.Axes([ **250** , **300** ])`, 200 & 300 represent **begining** of _cartesian plane_ in pixels.
+`dg.Axes([ 250 , 300 ])`, 200 & 300 represent **begining** of _cartesian plane_ in pixels.
 
 see `dg.geom.Vector` class under helping classes & functions. 
 
@@ -255,7 +255,7 @@ Constructor: `dg.geom.Vector([number p, number q])`
 
 ###### Methods
 
-`str()` returns nice string representation of a vector. _For debugging__.
+`str()` returns nice string representation of a vector. _For debugging_.
 
 `translate(Vector v)` translates vector position by `Vector` v.
 
@@ -267,7 +267,7 @@ Constructor: `dg.geom.Vector([number p, number q])`
 
 `mul(number t)` scalar multiplication of a vector. 
 
-`label(?string s) gets/sets vector label. 
+`label(?string s)` gets/sets vector label. 
 
 `xy()` returns vector coordinates as an array.
 
@@ -295,11 +295,13 @@ Constructor: `dg.geom.Vector([number p, number q])`
 
 `dg.square(array d)` returns squared array.
 
-`dg.centroid(array[Points]) returns centroid `Point` of an array of _points_.
+`dg.centroid(array[Points])` returns centroid `Point` of an array of _points_.
 
 `dg.color.rand()` returns random color as string in rgb format. 
 * Output example: `rgb(241,124,252)` 
+
 ### Geometry type ids
+
 - 1 point
 - 2 vector,
 - 3 midpoint,
