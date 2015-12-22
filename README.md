@@ -12,6 +12,61 @@ Everything in **dg** is scoped under `dg` namespace
 
 DG uses semantic versioning. You can find current version of dg as `dg.version`
 
+## dg.canvas namespace 
+
+#### dg.canvas.Canvas class
+
+Constructor: `dg.Canvas(string elementID, ?object options)`
+* Return Value: `Canvas`
+
+`options` object 
+* Example: `{ border: "1px solid #ccc", width: 800, height: 600 }`
+
+Canvas creation example: `dg.Canvas("testcanvas", { border: '1px solid #ccc;' })`
+
+###### Methods
+
+`width()` gets canvas width in pixels
+* Return Value: `number`
+ 
+`height()` gets canvas height in pixels
+* Return Value: `number`
+
+## dg.Axes
+
+## dg.event namespace
+
+#### dg.event.Events class
+
+
+
+## dg.f namespace
+
+#### dg.f.Function class
+
+Constructor: 
+* `dg.Function(function f)`
+* `dg.Function(function f, string color)`
+* Return Value: reference to created function
+* Example: `dg.Function( function(x) { return Math.cos(x); } );`
+
+###### Methods
+
+_note that `function` refers to **javascript** function & `Function` refers to `dg.f.Function` class_
+
+`color(string color)` sets function drawing color
+* Return Value: `Function`
+
+`f(number x)` evaluates function value at x
+* Return Value: `number`
+
+`step(number s)` precision of function drawing (careful if you use `dg.Intersect` on functions)
+* Return Value: `Function`
+
+`setF(function f)` set function to f
+* Return Value: `Function`
+* Example: `dg.Function( function(x) { return 0; } ).setF( function(y) { return Math.sin(y); } );`
+
 ## dg.geom namespace
 
 #### dg.geom.Point class
