@@ -13,6 +13,21 @@
 
 		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
 		
+		/* function animation example */
+		/*
+		var f = dg.Function(function(x) { return Math.cos(x); }, dg.color.rand());
+		var f1 = dg.Function(function(x) { return 0; });
+		var i1 = dg.Intersect(f, f1);
+		var interval = setInterval(animate, 30);
+		
+		var step = 0.05;
+		var t = 0;
+		function animate() {
+			
+			f.setF(function(x) { return Math.cos(x) * Math.sin(t); });
+			t += step;
+		}
+		*/
 		/* point styles */
 		/*
 		var p1 = dg.Point([1,1]).label("P").color("#00ff00");
@@ -135,7 +150,7 @@
 		
 		/* events testing */
 		/* midpoint, parallel and perpendicular line dependency */
-		
+		/*
 		var p1 = dg.Point([1, 1]).label("A");
 		console.log(p1);
 		var p2 = dg.Point([4, 2]).label("B");
@@ -145,14 +160,14 @@
 		var p3 = dg.Point([0, 3]);
 		var prl = dg.ParallelLine(p3, pl);
 		dg.PerpendicularLine(p3, prl);
-		
+		*/
 		/* circumcenter */
 		/*
 		var p1 = dg.Point([1, 1]).label("A");
 		var p2 = dg.Point([4, 5]).label("B");
 		var p3 = dg.Point([7,2]).label("C");
 		var c = dg.Segment(p1, p2);
-		var b = dg.Segment(p2, p3);
+		var b = dg.Segment(p2, p3).color(dg.color.rand());
 		var a = dg.Segment(p3, p1);
 		var pa = dg.PerpendicularBisector(a);
 		var pb = dg.PerpendicularBisector(b);
