@@ -531,6 +531,9 @@
 		if(!this._hide) {
 			this._xaxis.draw("x");
 			this._yaxis.draw("y");
+		} else {
+			this._xaxis._calcDomain("x");
+			this._yaxis._calcDomain("y");
 		}
 	}
 	
@@ -1542,6 +1545,10 @@
 		this._f = f;
 		this.draw();
 		dg_repaint();
+		return this;
+	}
+	dg.f.Function.prototype.step = function(s) {
+		this._step = s;
 		return this;
 	}
 	dg.f.Function.prototype.color = function(c) {
