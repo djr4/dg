@@ -1538,6 +1538,12 @@
 		this._type = 13;
 		return this;
 	}
+	dg.f.Function.prototype.setF = function(f) {
+		this._f = f;
+		this.draw();
+		dg_repaint();
+		return this;
+	}
 	dg.f.Function.prototype.color = function(c) {
 		this._style = c;
 		dg_repaint();
