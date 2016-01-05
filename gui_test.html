@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+	<title>dg execution eviron</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF8">
+	<script type="text/javascript" src="dg.js" ></script>
+	<style type="text/css">
+		input[type="text"] { 
+			width: 670px; 
+			height: 100px; 
+			border: 1px solid #ccc; 
+			font-size: 22px;
+			padding: 0 10px;
+			margin: 0;
+		}
+		input[type="button"] {
+			width: 100px;
+			height: 100px;
+			padding: 10px;
+			font-size: 22px;
+			margin: 0;
+		}
+		
+		.geom_def {
+			color: green;
+			font-size: 14px;
+		}
+		.geom {
+			padding: 5px;
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<table>
+		<tr valign="top">
+			<td><canvas id="testcanvas"></canvas></td>
+			<td>
+				<h2>geometry objects</h2>
+				<div id="stat"></div>
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+
+		var canvas = dg.Canvas("testcanvas", { border: "1px solid #ccc", width: 800, height: 500});
+
+		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
+		
+		/* deep embedding example */
+		
+		var geom_objects = {};
+		
+		function dg_keyup() {
+			var eval_el = document.getElementById("eval_code");
+			var eval_code = document.getElementById("eval_code").value;
+			
+			if (eval_code != undefined && eval_code.charAt(eval_code.length-1) == ";" )
+				dg_eval();
+		}
+		function dg_eval() {
+			var eval_el = document.getElementById("eval_code");
+			var eval_code = document.getElementById("eval_code").value;
+			eval_el.value = "";
+			var stat_el = document.getElementById("stat");
+			
+			var rePoint = /([a-zA-Z])+\s*=\s*\(\s*(-?[0-9]+)\s*,\s*(-?[0-9]+)\s*\);?/i;
+			var reLine = /([a-zA-Z])+\s*=\s*Line\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reCircle = /([a-zA-Z])+\s*=\s*Circle\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reSegment = /([a-zA-Z])+\s*=\s*Segment\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reTangent = /([a-zA-Z])+\s*=\s*Tangent\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			/*  syntax example: A = (1 , 1); B = (2, 2); a = Line(A,B); 
+			 ; -> calls dg_eval(), no need for eval button.
+			*/
+			var point = eval_code.match(rePoint);
+			var line = eval_code.match(reLine);
+			var circle = eval_code.match(reCircle);
+			var segment = eval_code.match(reSegment);
+			var tangent = eval_code.match(reTangent);
+			
+			if(point != undefined && point.length == 4) {
+				geom_objects[point[1]] = { code: function() { return dg.Point([ point[2], point[3]]).label(point[1]); }, eval: false, geom: "Point" };
+			}
+			if(line != undefined && line.length == 4) {
+				geom_objects[line[1]] = { code: function() { return dg.Line( geom_objects[line[2]].ref, geom_objects[line[3]].ref ); }, eval: false };			
+			}
+			if(circle != undefined && circle.length == 4) {
+				geom_objects[circle[1]] = { code: function() { return dg.Circle( geom_objects[circle[2]].ref, geom_objects[circle[3]].ref ); }, eval: false };			
+			}			
+			if(segment != undefined && segment.length == 4) {
+				geom_objects[segment[1]] = { code: function() { return dg.Segment( geom_objects[segment[2]].ref, geom_objects[segment[3]].ref ); }, eval: false };			
+			}
+			if(tangent != undefined && tangent.length == 4) {
+				geom_objects[tangent[1]] = { code: function() { return dg.Tangent( geom_objects[tangent[2]].ref, geom_objects[tangent[3]].ref ); }, eval: false };			
+			}	
+			
+			for(var variable in geom_objects) {
+				if(geom_objects[variable].eval == false) {
+					
+					geom_objects[variable].eval = true;
+					geom_objects[variable].ref = geom_objects[variable].code();
+					
+				}
+				
+			}
+			
+			/* update stat of geom requires str() method to be implemented */
+			stat_el.innerHTML = "";
+			for(var variable in geom_objects) {
+				new_stat = "<div class='geom'><span class='geom_def'>" + variable  +" = </span> " + geom_objects[variable].ref.str() + "</div>";
+				console.log(new_stat);
+				stat_el.innerHTML += new_stat;
+			}
+		}
+	</script>
+	<form>
+		<table>
+			<tr>
+			<td><input type="text" id="eval_code" onkeyup="dg_keyup()"/></td>
+			<td><input type="button" value="Eval" onclick="dg_eval()"/></td>
+			</tr>
+	</form>
+</body>
+</html>
