@@ -1063,6 +1063,9 @@
 		this._d = new dg.geom.Dependency();
 		return this;
 	}
+	dg.geom.Point.prototype.str = function() {
+		return "Point( " + this._x + ", " + this._y + " )"; 
+	}
 	dg.geom.Point.prototype.color = function(c) {
 		this._color = c;
 		dg_repaint();
@@ -1165,6 +1168,9 @@
 	}
 	dg.geom.Midpoint.prototype = Object.create(dg.geom.Point.prototype);
 	dg.geom.Midpoint.prototype.constructor = dg.geom.Midpoint;
+	dg.geom.Midpoint.prototype.str = function() {
+		return "Midpoint( " + this._x + ", " + this._y + " )"; 
+	}
 	dg.geom.Midpoint.prototype.recalc = function() { 
 		var centroid = dg.centroid([this._p0, this._p1]);
 		
@@ -1188,6 +1194,9 @@
 		
 		return this;
 	}
+	dg.geom.Segment.prototype.str = function() {
+		return "Segment( " + this._p0.str() + ", " + this._p1.str() + " )"; 
+	}	
 	dg.geom.Segment.prototype.p0 = function() { 
 		return this._p0;
 	}
@@ -1218,6 +1227,9 @@
 		this._type = 4;
 		this._color = "#202020";
 		return this;
+	}
+	dg.geom.Line.prototype.str = function() {
+		return "Line( " + this._p0.str() + ", " + this._p1.str() + " )"; 
 	}
 	dg.geom.Line.prototype.p0 = function() { 
 		return this._p0;
@@ -1387,6 +1399,9 @@
 		
 		return this;
 	}
+	dg.geom.Circle.prototype.str = function() {
+		return "Circle( " + this._p0.str() + ", " + this._p1.str() + " )"; 
+	}	
 	dg.geom.Circle.prototype.recalc = function() {
 		this._r = this._p0.dist(this._p1);
 		
@@ -1427,6 +1442,9 @@
 		this._type = 11;
 	
 		return this;
+	}
+	dg.geom.Tangent.prototype.str = function() {
+		return "Tangent( " + this._p.str() + " , " + this._c.str() + " )";
 	}
 	dg.geom.Tangent.prototype.recalc = function() { 
 		this._mp = new dg.geom.Midpoint(this._p, this._c._p0);
