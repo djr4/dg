@@ -64,11 +64,11 @@
 			eval_el.value = "";
 			var stat_el = document.getElementById("stat");
 			
-			var rePoint = /([a-zA-Z])+\s*=\s*\(\s*(-?[0-9]+)\s*,\s*(-?[0-9]+)\s*\);?/i;
-			var reLine = /([a-zA-Z])+\s*=\s*Line\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
-			var reCircle = /([a-zA-Z])+\s*=\s*Circle\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
-			var reSegment = /([a-zA-Z])+\s*=\s*Segment\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
-			var reTangent = /([a-zA-Z])+\s*=\s*Tangent\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var rePoint = /([a-zA-Z]+)\s*=\s*\(\s*(-?[0-9]+)\s*,\s*(-?[0-9]+)\s*\);?/i;
+			var reLine = /([a-zA-Z]+)\s*=\s*Line\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reCircle = /([a-zA-Z]+)\s*=\s*Circle\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reSegment = /([a-zA-Z]+)\s*=\s*Segment\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reTangent = /([a-zA-Z]+)\s*=\s*Tangent\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
 			/*  syntax example: A = (1 , 1); B = (2, 2); a = Line(A,B); 
 			 ; -> calls dg_eval(), no need for eval button.
 			*/
