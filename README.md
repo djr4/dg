@@ -275,7 +275,7 @@ Constructor: `dg.geom.Vector([number p, number q])`
 
 `y()` returns y coordinate of a vector.
 
-#### helping functions
+#### Helping functions
 
 `dg.geom.transform` & `dg.geom.transform_inverse` are used as mapping functions from canvas to created coordinate system & vice versa.
 
