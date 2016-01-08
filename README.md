@@ -137,7 +137,12 @@ Constructor: `dg.Angle(Point p0, Point p1, Point p2)`
 	
 `setY(number n)`  sets y coordinate of a point **use for animation** (calls repaint)
 * Return Value: `Point`
-* Example `dg.Point([0,0]).setY(3);	
+* Example `dg.Point([0,0]).setY(3);
+
+`addEvent(string eventName, function callback)` registers event listener
+* Return Value: `Point`
+* Example `dg.Point([0,0]).addEvent('click', function() { ... });
+* Events: `click` `moved`	
 
 #### dg.geom.Midpoint
 
