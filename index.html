@@ -13,6 +13,41 @@
 
 		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
 		
+		/* point events example */
+		
+		var p1 = dg.Point([1,1]).label("P").color("#00ff00");
+		p1.addEvent('moved', function() {
+			console.log(p1.str());
+			if(p1.x() > 2) {
+				console.log(" x coordinate > 2");
+			}
+		});
+		
+		var p2 = dg.Point([2,2]).label("A").size(4);
+		p2.addEvent('click', function() { 
+			p2.color(dg.color.rand());
+		});
+
+		var p3 = dg.Point([3, 0]).label("R").size(6).color("#ff0000");
+		dg.Line(p3, new dg.geom.Point([3,1]));
+		var midpoint = dg.Midpoint(p1,p2).label("M");
+		var flag = false;
+		midpoint.addEvent('moved', 
+			function() { 
+				if(this.dg_object.x() >= 3) {
+					
+					if(flag == false) {
+						/* important! flag = true; before dg. call */
+						flag = true;
+						dg.Circle(midpoint, p3);
+					}
+					
+				}					
+			
+		});
+		
+		dg.Line(p1 , p2);
+				
 		/* function animation example */
 		/*
 		var f = dg.Function(function(x) { return Math.cos(x); }, dg.color.rand()).step(0.1);
