@@ -1061,6 +1061,17 @@
 		this._color = "#0000ff";
 		this._size = 4; 
 		this._d = new dg.geom.Dependency();
+		this._events = {};
+
+		return this;
+	}
+	dg.geom.Point.prototype.addEvent = function(en, callback) {
+		if(en == "moved") {
+			this._events["moved"] = { dg_object: this, dispatch: callback };
+		}
+		if(en == "click") {
+			this._events['click'] = { dg_object: this, dispatch: callback };
+		}
 		return this;
 	}
 	dg.geom.Point.prototype.str = function() {
@@ -1114,6 +1125,10 @@
 			return this._x;
 		else {
 			this._x = arguments[0];
+			if(this._events['moved'] != undefined) {
+				this._events['moved'].dispatch();
+			}
+
 			return this;
 		}
 	}
@@ -1122,16 +1137,24 @@
 			return this._y;
 		else {
 			this._y = arguments[0];
+			if(this._events['moved'] != undefined) {
+				this._events['moved'].dispatch();	
+			}				
+	
 			return this;
 		}
 	}
 	dg.geom.Point.prototype.setX = function(x) {
 		this._x = x;
+		if(this._events['moved'] != undefined)
+			this._events['moved'].dispatch();		
 		dg_repaint();
 		return this;
 	}
 	dg.geom.Point.prototype.setY = function(y) {
 		this._y = y;
+		if(this._events['moved'] != undefined)
+			this._events['moved'].dispatch();		
 		dg_repaint();
 		return this;
 	}
@@ -1174,10 +1197,12 @@
 	dg.geom.Midpoint.prototype.recalc = function() { 
 		var centroid = dg.centroid([this._p0, this._p1]);
 		
-		this._x = centroid.x();
-		this._y = centroid.y();
+		this.x( centroid.x() );
+		this.y( centroid.y() );
+			
 		/* if geom dependent on midpoint recalculate */
 		if(this._d.length() > 0) {
+			
 			for(var i = 0; i < this._d.length(); i++)
 				this._d.get(i).recalc();
 		}
@@ -1673,6 +1698,10 @@
 		
 						/* set object to manipulate */
 						this._g = dg.geom.objects[i];
+						
+						/* dispatch if click event registered */
+						if(this._g._events['click'] != undefined)
+							this._g._events['click'].dispatch();						
 					}
 				}
 
@@ -1713,6 +1742,7 @@
 			
 			this._g.x(gpos[0]);
 			this._g.y(gpos[1]);
+			
 			/* recalculate dependent geom objects */
 			this._g._d.recalc();
 			dg_repaint();
