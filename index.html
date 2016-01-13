@@ -37,7 +37,7 @@
 				if(this.dg_object.x() >= 3) {
 					
 					if(flag == false) {
-						/* important! flag = true; before dg. call */
+						//important! flag = true; before dg. call 
 						flag = true;
 						dg.Circle(midpoint, p3);
 					}
@@ -156,6 +156,7 @@
 		*/
 		/* functions */
 		/*
+		var g = dg.Function(function(x) { return 1/x; });
 		var f = dg.Function(function(x) { return x*x; }, "#ff0000").color(dg.color.rand());
 		var f1 = dg.Function(function(x) { return Math.cos(x); }, dg.color.rand());
 		var i1 = dg.Intersect(f, f1);
