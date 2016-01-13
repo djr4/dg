@@ -3,47 +3,136 @@
 <head>
 	<title>dg execution eviron</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
 	<script type="text/javascript" src="dg.js" ></script>
 	<style type="text/css">
 		input[type="text"] { 
-			width: 670px; 
-			height: 100px; 
-			border: 1px solid #ccc; 
 			font-size: 22px;
-			padding: 0 10px;
-			margin: 0;
-		}
-		input[type="button"] {
-			width: 100px;
-			height: 100px;
-			padding: 10px;
-			font-size: 22px;
-			margin: 0;
 		}
 		
 		.geom_def {
-			color: green;
+			color: blue;
 			font-size: 14px;
 		}
 		.geom {
 			padding: 5px;
 			font-weight: bold;
 		}
+		b {
+			color: blue;
+		}
+		.commands {
+			font-size: 12px;
+		}
+		#stat {
+			font-size: 11px !important;
+			line-height: 110%;
+		}
 	</style>
 </head>
 <body>
-	<table>
-		<tr valign="top">
-			<td><canvas id="testcanvas"></canvas></td>
-			<td>
-				<h2>geometry objects</h2>
-				<div id="stat"></div>
-			</td>
-		</tr>
-	</table>
-	<script type="text/javascript">
+	<div class="container-fluid">
+ 
 
-		var canvas = dg.Canvas("testcanvas", { border: "1px solid #ccc", width: 800, height: 500});
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">dg.js</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#">Home</a></li>
+            <li class="active"><a href="#interpreter">Interpreter</a></li>
+            <li><a href="#examples">Examples</a></li>
+			<li><a href="https://github.com/ddr-/dg">Get dg.js</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+	
+	<div class="row">
+		<div class="col-md-8" id="canvas_container">
+			<canvas id="testcanvas"></canvas>
+			<script type="text/javascript">
+				var canvas_wfix = document.getElementById("canvas_container").clientWidth;
+
+			</script>
+		</div>
+		<div class="col-md-4">
+			<h4>Interpreter</h4>
+			<form action="#">
+				<div class="form-group">
+						<input class="form-control" type="text" id="eval_code" onkeyup="dg_keyup()"/>
+						<!-- <input class="form-control" type="button" value="Eval" onclick="dg_eval()"/> -->
+				</div>
+			</form>
+			"<b>;</b>" evaluates expression.<br/>
+			<hr />
+			
+			<h6>Geometry Objects</h6>
+			
+			<div id="stat"></div>
+			<hr/>
+			<h6>Object Properties</h6>
+			<form class="form">
+			  <div class="form-group">
+				
+				<div class="input-group">
+				  <div class="input-group-addon">color</div>
+				  <input type="text" class="form-control" id="color" onkeyup="color_changed(this)">
+				</div>
+			
+			  </div>
+			  <div class="form-group">
+				
+				<div class="input-group">
+				  <div class="input-group-addon">size</div>
+				  <input type="text" class="form-control" id="size" onkeyup="size_changed(this)">
+				</div>
+			
+			  </div>			  
+			</form>
+			<hr />
+			<h6>Commands <span class="caret" id="command" style="cursor: pointer;"></span></h6>
+			<ul class="commands" id="commands" style="display: none;">
+				<li><b>Variable</b> -> [a-zA-Z]+</li>
+				<li><b>Point</b> -> <b>Variable</b> = (<b>Number</b>, <b>Number</b>);</li>
+				<li><b>Midpoint</b> -> <b>Variable</b> = Midpoint(<b>Point</b>, <b>Point</b>); <br/>
+				| <b>Variable</b> = Midpoint(<b>Segment</b>); </li>
+				<li><b>Line</b> -> <b>Variable</b> = Line(<b>Point</b>, <b>Point</b>); </li>
+				<li><b>Segment</b> -> <b>Variable</b> = Segment(<b>Point</b>, <b>Point</b>); </li>
+				<li><b>Circle</b> -> <b>Variable</b> = Circle(<b>Point</b>, <b>Point</b>); </li>
+				<li><b>Tangent</b> -> <b>Variable</b> = Tangent(<b>Point</b>, <b>Circle</b>); </li>
+				<li><b>ParallelLine</b> -> <b>Variable</b> = ParallelLine(<b>Point</b>, <b>Line</b>); </li>
+				<li><b>PerpendicularLine</b> -> <b>Variable</b> = PerpendicularLine(<b>Point</b>, <b>Line</b>); </li>
+				<li><b>PerpendicularBisector</b> -> <b>Variable</b> = PerpendicularBisector(<b>Segment</b>); </li>
+				<li><b>AngleBisector</b> -> <b>Variable</b> = AngleBisector(<b>Point</b>,<b>Point</b>,<b>Point</b>); </li>
+				<li><b>Angle</b> -> <b>Variable</b> = Angle(<b>Point</b>,<b>Point</b>,<b>Point</b>); </li>
+				<li><b>Polygon</b> -> <b>Variable</b> = Polygon([ <b>Point</b>,<b>Point</b> ],<b>Number</b>);
+				<br/> | <b>Variable</b> = Polygon([ <b>Point</b>,<b>Point</b>,<b>Point</b>, ...] ) </li>
+				
+			</ul>
+			<script type="text/javascript">
+				document.getElementById("command").addEventListener('click', function() {
+					if(document.getElementById("commands").style.display == "none")
+						document.getElementById("commands").style.display = "block";
+					else
+						document.getElementById("commands").style.display = "none";
+				});
+			</script>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+	
+
+		var canvas = dg.Canvas("testcanvas", { border: "1px solid #ccc", width: canvas_wfix - 30, height: 500});
 
 		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
 		
@@ -51,6 +140,29 @@
 		
 		var geom_objects = {};
 		
+		function size_changed(o) {
+			if(o['dg-object'] != undefined) {
+			
+				if(geom_objects[o['dg-object']] != undefined
+				&& geom_objects[o['dg-object']].ref != undefined ) {
+					var current_size = document.getElementById("size").value;
+					geom_objects[o['dg-object']].ref.size(parseInt(current_size));
+				}
+			}
+			
+		}
+		function color_changed(o) {
+			if(o['dg-object'] != undefined) {
+			
+				if(geom_objects[o['dg-object']] != undefined
+				&& geom_objects[o['dg-object']].ref != undefined ) {
+					var current_color = document.getElementById("color").value;
+					geom_objects[o['dg-object']].ref.color(current_color);
+					geom_objects[o['dg-object']].geom_color = current_color;
+					update_stat();
+				}
+			}		
+		}
 		function dg_keyup() {
 			var eval_el = document.getElementById("eval_code");
 			var eval_code = document.getElementById("eval_code").value;
@@ -62,13 +174,22 @@
 			var eval_el = document.getElementById("eval_code");
 			var eval_code = document.getElementById("eval_code").value;
 			eval_el.value = "";
-			var stat_el = document.getElementById("stat");
 			
-			var rePoint = /([a-zA-Z]+)\s*=\s*\(\s*(-?[0-9]+)\s*,\s*(-?[0-9]+)\s*\);?/i;
+			
+			var rePoint = /([a-zA-Z]+)\s*=\s*\((\s*(-?[0-9]+)(\.([0-9]+))?)\s*,\s*((-?[0-9]+)(\.([0-9]+))?)\s*\);?/i;
 			var reLine = /([a-zA-Z]+)\s*=\s*Line\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reMidpoint = /([a-zA-Z]+)\s*=\s*Midpoint\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reMidpoint_s = /([a-zA-Z]+)\s*=\s*Midpoint\(\s*([a-zA-Z]+)\s*\);?/i;
 			var reCircle = /([a-zA-Z]+)\s*=\s*Circle\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
 			var reSegment = /([a-zA-Z]+)\s*=\s*Segment\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
 			var reTangent = /([a-zA-Z]+)\s*=\s*Tangent\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reParallelLine = /([a-zA-Z]+)\s*=\s*ParallelLine\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var rePerpendicularLine = /([a-zA-Z]+)\s*=\s*PerpendicularLine\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var rePerpendicularBisector = /([a-zA-Z]+)\s*=\s*PerpendicularBisector\(\s*([a-zA-Z]+)\s*\);?/i;
+			var reAngleBisector = /([a-zA-Z]+)\s*=\s*AngleBisector\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var reAngle = /([a-zA-Z]+)\s*=\s*Angle\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
+			var rePolygon_r = /([a-zA-Z]+)\s*=\s*Polygon\(\s*\[\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\]\s*,\s*(-?[0-9]+)\s*\);?/i;
+			var rePolygon = /([a-zA-Z]+)\s*=\s*Polygon\(\s*\[\s*([a-zA-Z]+)(\s*,\s*([a-zA-Z]+))+\]\);?/i;
 			/*  syntax example: A = (1 , 1); B = (2, 2); a = Line(A,B); 
 			 ; -> calls dg_eval(), no need for eval button.
 			*/
@@ -77,9 +198,48 @@
 			var circle = eval_code.match(reCircle);
 			var segment = eval_code.match(reSegment);
 			var tangent = eval_code.match(reTangent);
+			var parallelLine = eval_code.match(reParallelLine);
+			var perpendicularLine = eval_code.match(rePerpendicularLine);
+			var perpendicularBisector = eval_code.match(rePerpendicularBisector);
+			var angleBisector = eval_code.match(reAngleBisector);
+			var midpoint = eval_code.match(reMidpoint);
+			var midpoint_s = eval_code.match(reMidpoint_s);
+			var angle = eval_code.match(reAngle);
+			var polygon_r = eval_code.match(rePolygon_r);
+			var polygon = eval_code.match(rePolygon);
 			
-			if(point != undefined && point.length == 4) {
-				geom_objects[point[1]] = { code: function() { return dg.Point([ parseInt(point[2]), parseInt(point[3]) ]).label(point[1]); }, eval: false, geom: "Point" };
+			if(polygon != undefined && polygon.length == 5) {
+				var match, re = /([a-zA-Z]+)/ig;
+				var points = [];
+				match = eval_code.match(re);
+				if(isNaN(match[4])) {
+					for(var i = 2; i < match.length; i++) {
+						points.push(geom_objects[match[i]].ref);
+					}
+					geom_objects[polygon[1]] = { code: function() { return dg.Polygon( points ); }, eval: false };	
+				}
+			}			
+			if(polygon_r != undefined && polygon_r.length == 5) {
+				geom_objects[polygon_r[1]] = { code: function() { return dg.Polygon( [geom_objects[polygon_r[2]].ref, geom_objects[polygon_r[3]].ref ], parseInt(polygon_r[4])); }, eval: false };	
+			}
+			if(midpoint != undefined && midpoint.length == 4) {
+				geom_objects[midpoint[1]] = { code: function() { return dg.Midpoint( geom_objects[midpoint[2]].ref, geom_objects[midpoint[3]].ref); }, eval: false };	
+			} 
+			if(midpoint_s != undefined && midpoint_s.length == 3) {
+				geom_objects[midpoint_s[1]] = { code: function() { return dg.Midpoint( geom_objects[midpoint_s[2]].ref); }, eval: false };	
+			}
+			if(angleBisector != undefined && angleBisector.length == 5) {
+				geom_objects[angleBisector[1]] = { code: function() { return dg.AngleBisector( geom_objects[angleBisector[2]].ref, geom_objects[angleBisector[3]].ref, geom_objects[angleBisector[4]].ref ); }, eval: false };			
+			}
+			if(angle != undefined && angle.length == 5) {
+				geom_objects[angle[1]] = { code: function() { return dg.Angle( geom_objects[angle[2]].ref, geom_objects[angle[3]].ref, geom_objects[angle[4]].ref ); }, eval: false };			
+			}			
+			if(perpendicularBisector != undefined && perpendicularBisector.length == 3) {
+				geom_objects[perpendicularBisector[1]] = { code: function() { return dg.PerpendicularBisector( geom_objects[perpendicularBisector[2]].ref); }, eval: false };
+			}
+			if(point != undefined && point.length == 10) {
+				geom_objects[point[1]] = { code: function() { return dg.Point([ parseFloat(point[2]), parseFloat(point[6]) ]).label(point[1]); },
+				eval: false, listener: undefined, geom_color: "#0000ff" };
 			}
 			if(line != undefined && line.length == 4) {
 				geom_objects[line[1]] = { code: function() { return dg.Line( geom_objects[line[2]].ref, geom_objects[line[3]].ref ); }, eval: false };			
@@ -93,32 +253,64 @@
 			if(tangent != undefined && tangent.length == 4) {
 				geom_objects[tangent[1]] = { code: function() { return dg.Tangent( geom_objects[tangent[2]].ref, geom_objects[tangent[3]].ref ); }, eval: false };			
 			}	
-			
+			if(parallelLine != undefined && parallelLine.length == 4) {
+				geom_objects[parallelLine[1]] = { code: function() { return dg.ParallelLine( geom_objects[parallelLine[2]].ref, geom_objects[parallelLine[3]].ref ); }, eval: false };					
+			}
+			if(perpendicularLine != undefined && perpendicularLine.length == 4) {
+				geom_objects[perpendicularLine[1]] = { code: function() { return dg.PerpendicularLine( geom_objects[perpendicularLine[2]].ref, geom_objects[perpendicularLine[3]].ref ); }, eval: false };			
+					
+			}
 			for(var variable in geom_objects) {
 				if(geom_objects[variable].eval == false) {
 					
 					geom_objects[variable].eval = true;
 					geom_objects[variable].ref = geom_objects[variable].code();
+					if(geom_objects[variable].listener == undefined
+					 && geom_objects[variable].ref._type == 1) {
+						
+						/* add event listener */
+						geom_objects[variable].ref.addEvent('click', function() {
+							var color = document.getElementById("color");
+							color.value = geom_objects[variable].ref.color();
+							color.style.color = color.value;
+							color["dg-object"] = variable;
+							geom_objects[variable].geom_color = geom_objects[variable].ref.color();
+							
+							var size = document.getElementById("size");
+							size.value = geom_objects[variable].ref.size();
+							size["dg-object"] = variable;
+						});
+						
+						geom_objects[variable].ref.addEvent('moved', function() {
+						
+							update_stat();
+						});
+					}
 					
 				}
 				
 			}
 			
+			update_stat();
+		}
+		
+		function update_stat() {
 			/* update stat of geom requires str() method to be implemented */
+			var stat_el = document.getElementById("stat");
 			stat_el.innerHTML = "";
 			for(var variable in geom_objects) {
-				new_stat = "<div class='geom'><span class='geom_def'>" + variable  +" = </span> " + geom_objects[variable].ref.str() + "</div>";
-				console.log(geom_objects[variable]);
+				new_stat = "<div class='geom'><span style='color: " + geom_objects[variable].geom_color +";'>" + variable  +" = </span> " + geom_objects[variable].ref.str() + "</div>";
+				
 				stat_el.innerHTML += new_stat;
-			}
+			}		
 		}
+		
+		/* make sure user wants to reload or leave */
+		window.onbeforeunload = function(e) {
+			return 'Your work will be lost. Are you sure?';
+		};
 	</script>
-	<form>
-		<table>
-			<tr>
-			<td><input type="text" id="eval_code" onkeyup="dg_keyup()"/></td>
-			<td><input type="button" value="Eval" onclick="dg_eval()"/></td>
-			</tr>
-	</form>
+	
+	</div>
 </body>
 </html>
