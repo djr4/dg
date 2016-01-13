@@ -115,12 +115,12 @@ Constructor: `dg.Angle(Point p0, Point p1, Point p2)`
 * Return Value: `Point`
 * Example `dg.Point([0,0]).size(4);`
 
-`color(string c)` set point color
-* Return Value: `Point`
+`color()` get/set point color
+* Return Value: `String`|`Point`
 * Example `dg.Point([0,0]).color('rgb(255,0,0)');`
 
-`size(number s)` sets point size in pixels
-* Return Value: `Point`
+`size(number s)` get/sets point size in pixels
+* Return Value: `String`|`Point`
 * Example `dg.Point([0,0]).size(4);`
 
 `xy()`  gets point coordinates as array
