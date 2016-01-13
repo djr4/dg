@@ -1607,6 +1607,9 @@
 		this._type = 13;
 		return this;
 	}
+	dg.f.Function.prototype.str = function() {
+		return "Function( " + this._f.toString() + " )";
+	}
 	dg.f.Function.prototype.setF = function(f) {
 		this._f = f;
 		this.draw();
@@ -1622,8 +1625,11 @@
 		dg_repaint();
 		return this;
 	}
-	dg.f.Function.prototype.f = function(x) {
-		return this._f(x);
+	dg.f.Function.prototype.f = function() {
+		if(arguments.length == 1)
+			return this._f(arguments[0]);
+		else if(arguments.length == 2)
+			return this._f(arguments[0], arguments[1]);
 	}
 	dg.f.Function.prototype.draw = function() { 
 		var axes = dg.axes.objects[0];
@@ -1632,18 +1638,21 @@
 		var ymin = axes._yaxis._dmin;
 		var ymax = axes._yaxis._dmax;
 		
-		var i = xmin;
-		var p0 = dg.geom.transform([i, this.f(i)]);
-		var p1;
-		
-		while(i < xmax) {
-			p1 = dg.geom.transform([i + this._step, this.f(i + this._step)]);
-			if(this.f(i) < ymax + this._step && this.f(i+this._step) > ymin - this._step)
-				dg_draw_segment(p0, p1, this._style);
+		if(this._f.length == 1) {
+			var i = xmin;
+			var p0 = dg.geom.transform([i, this.f(i)]);
+			var p1;
 			
-			p0 = p1;
-			i+= this._step;
-		}
+			while(i < xmax) {
+				p1 = dg.geom.transform([i + this._step, this.f(i + this._step)]);
+				if(this.f(i) < ymax + this._step && this.f(i+this._step) > ymin - this._step)
+					dg_draw_segment(p0, p1, this._style);
+				
+				p0 = p1;
+				i+= this._step;
+			}
+			
+		} 
 	}
 	dg.canvas = {};
 
