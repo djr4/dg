@@ -96,9 +96,18 @@
 				  <input type="text" class="form-control" id="size" onkeyup="size_changed(this)">
 				</div>
 			
+			  </div>
+			  <div class="form-group">
+				
+				<div class="input-group">
+				  <div class="input-group-addon">label</div>
+				  <input type="text" class="form-control" id="dglabel" onkeyup="label_changed(this)">
+				</div>
+			
 			  </div>			  
 			</form>
-			<hr />
+		
+			<hr/>
 			<h6>Commands <span class="caret" id="command" style="cursor: pointer;"></span></h6>
 			<ul class="commands" id="commands" style="display: none;">
 				<li><b>Variable</b> -> [a-zA-Z]+</li>
@@ -115,7 +124,8 @@
 				<li><b>AngleBisector</b> -> <b>Variable</b> = AngleBisector(<b>Point</b>,<b>Point</b>,<b>Point</b>); </li>
 				<li><b>Angle</b> -> <b>Variable</b> = Angle(<b>Point</b>,<b>Point</b>,<b>Point</b>); </li>
 				<li><b>Polygon</b> -> <b>Variable</b> = Polygon([ <b>Point</b>,<b>Point</b> ],<b>Number</b>);
-				<br/> | <b>Variable</b> = Polygon([ <b>Point</b>,<b>Point</b>,<b>Point</b>, ...] ) </li>
+				<br/> | <b>Variable</b> = Polygon([ <b>Point</b>,<b>Point</b>,<b>Point</b>, ...] ); </li>
+				<li><b>Variable</b> = Function(<b>String</b>, <b>Function</b>);</li>
 				
 			</ul>
 			<script type="text/javascript">
@@ -128,7 +138,14 @@
 			</script>
 		</div>
 	</div>
-	
+	<div class="row-fluid" id="mycode" style="display: block;">
+		<h5>Generated code in <mark>javascript</mark> using <b>dg.js</b> lib</h5>
+		<hr />
+		<code id="mycodejs">
+		
+		</code>
+		<hr />
+	</div>
 	<script type="text/javascript">
 	
 
@@ -139,7 +156,21 @@
 		/* deep embedding example */
 		
 		var geom_objects = {};
-		
+		var mycode = [];
+
+		function label_changed(o) {
+			if(o['dg-object'] != undefined) {
+			
+				if(geom_objects[o['dg-object']] != undefined
+				&& geom_objects[o['dg-object']].ref != undefined ) {
+					var current_label = document.getElementById("dglabel").value;
+					geom_objects[o['dg-object']].ref.label(current_label);
+					mycode.push(o['dg-object'] + ".label('" + current_label + "');" );
+					update_stat();
+				}
+			}
+			
+		}		
 		function size_changed(o) {
 			if(o['dg-object'] != undefined) {
 			
@@ -147,6 +178,8 @@
 				&& geom_objects[o['dg-object']].ref != undefined ) {
 					var current_size = document.getElementById("size").value;
 					geom_objects[o['dg-object']].ref.size(parseInt(current_size));
+					mycode.push(o['dg-object'] + ".size(" + current_size + ");" );
+					update_stat();
 				}
 			}
 			
@@ -190,6 +223,7 @@
 			var reAngle = /([a-zA-Z]+)\s*=\s*Angle\(\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\);?/i;
 			var rePolygon_r = /([a-zA-Z]+)\s*=\s*Polygon\(\s*\[\s*([a-zA-Z]+)\s*,\s*([a-zA-Z]+)\s*\]\s*,\s*(-?[0-9]+)\s*\);?/i;
 			var rePolygon = /([a-zA-Z]+)\s*=\s*Polygon\(\s*\[\s*([a-zA-Z]+)(\s*,\s*([a-zA-Z]+))+\]\);?/i;
+			var reFunction = /([a-zA-Z]+)\s*=\s*Function\(\s*([a-zA-Z]+)\s*,\s*([^)]+)\);/i;
 			/*  syntax example: A = (1 , 1); B = (2, 2); a = Line(A,B); 
 			 ; -> calls dg_eval(), no need for eval button.
 			*/
@@ -207,58 +241,88 @@
 			var angle = eval_code.match(reAngle);
 			var polygon_r = eval_code.match(rePolygon_r);
 			var polygon = eval_code.match(rePolygon);
+			var fn = eval_code.match(reFunction);
 			
 			if(polygon != undefined && polygon.length == 5) {
 				var match, re = /([a-zA-Z]+)/ig;
 				var points = [];
+				var jscode = polygon[1] + " = dg.Polygon([ " + polygon[2]; 
 				match = eval_code.match(re);
 				if(isNaN(match[4])) {
 					for(var i = 2; i < match.length; i++) {
 						points.push(geom_objects[match[i]].ref);
 					}
+					for(var i = 3; i < match.length; i++)
+						jscode += ", " + match[i];
+					jscode += "]);";
+					mycode.push(jscode);
 					geom_objects[polygon[1]] = { code: function() { return dg.Polygon( points ); }, eval: false };	
 				}
-			}			
+			}
+			if(fn != undefined && fn.length == 4) {
+				var fstr = "var fne = function(" + fn[2] + ") { return " + fn[3] +"; }";
+				eval(fstr);
+				geom_objects[fn[1]] = { code: function() { return dg.Function(fne) }, eval: false };
+				mycode.push(fn[1] + " = dg.Function(function(" + fn[2] + ") { return " + fn[3]  + "; });");
+				
+			}
 			if(polygon_r != undefined && polygon_r.length == 5) {
 				geom_objects[polygon_r[1]] = { code: function() { return dg.Polygon( [geom_objects[polygon_r[2]].ref, geom_objects[polygon_r[3]].ref ], parseInt(polygon_r[4])); }, eval: false };	
+				mycode.push(polygon_r[1] + " = dg.Polygon([" + polygon_r[2] + ", " + polygon_r[3] + "], " + parseInt(polygon_r[4]) + ");" );
 			}
 			if(midpoint != undefined && midpoint.length == 4) {
-				geom_objects[midpoint[1]] = { code: function() { return dg.Midpoint( geom_objects[midpoint[2]].ref, geom_objects[midpoint[3]].ref); }, eval: false };	
+				geom_objects[midpoint[1]] = { code: function() { return dg.Midpoint( geom_objects[midpoint[2]].ref, geom_objects[midpoint[3]].ref); }, eval: false };
+				mycode.push(midpoint[1] + " = dg.Midpoint(" + midpoint[2] + ", " + midpoint[3] + ");");
 			} 
 			if(midpoint_s != undefined && midpoint_s.length == 3) {
 				geom_objects[midpoint_s[1]] = { code: function() { return dg.Midpoint( geom_objects[midpoint_s[2]].ref); }, eval: false };	
+				mycode.push(midpoint_s[1] + " = dg.Midpoint(" + midpoint_s[2] + ");");
 			}
 			if(angleBisector != undefined && angleBisector.length == 5) {
-				geom_objects[angleBisector[1]] = { code: function() { return dg.AngleBisector( geom_objects[angleBisector[2]].ref, geom_objects[angleBisector[3]].ref, geom_objects[angleBisector[4]].ref ); }, eval: false };			
+				geom_objects[angleBisector[1]] = { code: function() { return dg.AngleBisector( geom_objects[angleBisector[2]].ref, geom_objects[angleBisector[3]].ref, geom_objects[angleBisector[4]].ref ); }, eval: false };	
+				mycode.push(angleBisector[1] + " = dg.AngleBisector(" + angleBisector[2] + ", " + angleBisector[3] + ", " + angleBisector[4] + ");" );
+				
 			}
 			if(angle != undefined && angle.length == 5) {
 				geom_objects[angle[1]] = { code: function() { return dg.Angle( geom_objects[angle[2]].ref, geom_objects[angle[3]].ref, geom_objects[angle[4]].ref ); }, eval: false };			
+				mycode.push(angle[1] + " = dg.Angle(" + angle[2] + ", " + angle[3] + ", " + angle[4] + ");" );
+
 			}			
 			if(perpendicularBisector != undefined && perpendicularBisector.length == 3) {
 				geom_objects[perpendicularBisector[1]] = { code: function() { return dg.PerpendicularBisector( geom_objects[perpendicularBisector[2]].ref); }, eval: false };
+				mycode.push(perpendicularBisector[1] + " = dg.PerpendicularBisector(" + perpendicularBisector[2] + ");" );
+			
 			}
 			if(point != undefined && point.length == 10) {
 				geom_objects[point[1]] = { code: function() { return dg.Point([ parseFloat(point[2]), parseFloat(point[6]) ]).label(point[1]); },
 				eval: false, listener: undefined, geom_color: "#0000ff" };
+				mycode.push("var " + point[1]  + " = dg.Point([ " +  parseFloat(point[2])  +" , " +  parseFloat(point[6]) + " ]);");
 			}
 			if(line != undefined && line.length == 4) {
-				geom_objects[line[1]] = { code: function() { return dg.Line( geom_objects[line[2]].ref, geom_objects[line[3]].ref ); }, eval: false };			
+				geom_objects[line[1]] = { code: function() { return dg.Line( geom_objects[line[2]].ref, geom_objects[line[3]].ref ); }, eval: false };
+				mycode.push("var " + line[1]  + " = dg.Line(" +  line[2]  +" , " +  line[3] + " );");
+				
 			}
 			if(circle != undefined && circle.length == 4) {
 				geom_objects[circle[1]] = { code: function() { return dg.Circle( geom_objects[circle[2]].ref, geom_objects[circle[3]].ref ); }, eval: false };			
+				mycode.push("var " + circle[1]  + " = dg.Circle(" +  circle[2]  +" , " +  circle[3] + " );");
+			
 			}			
 			if(segment != undefined && segment.length == 4) {
 				geom_objects[segment[1]] = { code: function() { return dg.Segment( geom_objects[segment[2]].ref, geom_objects[segment[3]].ref ); }, eval: false };			
+				mycode.push("var " + segment[1]  + " = dg.Segment(" +  segment[2]  +" , " +  segment[3] + " );");
 			}
 			if(tangent != undefined && tangent.length == 4) {
 				geom_objects[tangent[1]] = { code: function() { return dg.Tangent( geom_objects[tangent[2]].ref, geom_objects[tangent[3]].ref ); }, eval: false };			
+				mycode.push("var " + tangent[1]  + " = dg.Tangent(" +  tangent[2]  +" , " +  tangent[3] + " );");
 			}	
 			if(parallelLine != undefined && parallelLine.length == 4) {
 				geom_objects[parallelLine[1]] = { code: function() { return dg.ParallelLine( geom_objects[parallelLine[2]].ref, geom_objects[parallelLine[3]].ref ); }, eval: false };					
+				mycode.push("var " + parallelLine[1]  + " = dg.ParallelLine(" +  parallelLine[2]  +" , " +  parallelLine[3] + " );");			
 			}
 			if(perpendicularLine != undefined && perpendicularLine.length == 4) {
 				geom_objects[perpendicularLine[1]] = { code: function() { return dg.PerpendicularLine( geom_objects[perpendicularLine[2]].ref, geom_objects[perpendicularLine[3]].ref ); }, eval: false };			
-					
+				mycode.push("var " + perpendicularLine[1]  + " = dg.PerpendicularLine(" +  perpendicularLine[2]  +" , " +  perpendicularLine[3] + " );");					
 			}
 			for(var variable in geom_objects) {
 				if(geom_objects[variable].eval == false) {
@@ -279,6 +343,10 @@
 							var size = document.getElementById("size");
 							size.value = geom_objects[variable].ref.size();
 							size["dg-object"] = variable;
+							
+							var label = document.getElementById("dglabel");
+							label.value = geom_objects[variable].ref.label();
+							label["dg-object"] = variable;							
 						});
 						
 						geom_objects[variable].ref.addEvent('moved', function() {
@@ -302,7 +370,12 @@
 				new_stat = "<div class='geom'><span style='color: " + geom_objects[variable].geom_color +";'>" + variable  +" = </span> " + geom_objects[variable].ref.str() + "</div>";
 				
 				stat_el.innerHTML += new_stat;
-			}		
+			}
+
+			document.getElementById("mycodejs").innerHTML = "";
+			for(var i = 0; i < mycode.length; i++) {
+				document.getElementById("mycodejs").innerHTML += (mycode[i] + "<br />");
+			}
 		}
 		
 		/* make sure user wants to reload or leave */
