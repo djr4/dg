@@ -970,6 +970,9 @@
 	dg.geom.Angle.prototype.deg = function() {
 		return this._angle * 180 / Math.PI;
 	}
+	dg.geom.Angle.prototype.str = function() {
+		return "Angle( " + this._p0.str() + ", " + this._p1.str() + ", " + this._p2.str() + " )";
+	}
 	dg.geom.Angle.prototype.draw = function() {
 		var pc = dg.geom.transform([this._pos.x(), this._pos.y()]);
 		var intersection = dg.geom.transform(this._intersection.xy());
@@ -1075,17 +1078,25 @@
 		return this;
 	}
 	dg.geom.Point.prototype.str = function() {
-		return "Point( " + this._x + ", " + this._y + " )"; 
+		return "Point( " + this._x.toFixed(2) + ", " + this._y.toFixed(2) + " )"; 
 	}
-	dg.geom.Point.prototype.color = function(c) {
-		this._color = c;
-		dg_repaint();
-		return this;
+	dg.geom.Point.prototype.color = function() {
+		if(arguments.length > 0) {
+			this._color = arguments[0];
+			dg_repaint();
+			return this;
+		} else {
+			return this._color;
+		}
 	}
-	dg.geom.Point.prototype.size = function(s) {
-		this._size = s;
-		dg_repaint();
-		return this;
+	dg.geom.Point.prototype.size = function() {
+		if(arguments.length> 0) {
+			this._size = arguments[0];
+			dg_repaint();
+			return this;
+		} else {
+			return this._size;
+		}
 	}
 	dg.geom.Point.prototype.free = function(f) {
 		this._free = f;
@@ -1528,6 +1539,18 @@
 		this._stroke = "#993300";
 		
 		return this;
+	}
+	dg.geom.Polygon.prototype.str = function() {
+		if(this._n == 0) {
+			var rstring = "Polygon( " + this._points[0].str();
+			for(var i = 1; i < this._points.length; i++) {
+				rstring += (", " + this._points[i].str());
+			}
+			rstring += " )";
+			return rstring;
+		} else {
+			return "Polygon( " + this._points[0].str() + ", " + this._points[1].str() + ", " + this._n + " )";
+		}
 	}
 	dg.geom.Polygon.prototype.color = function(c) {
 		this._color = c;
