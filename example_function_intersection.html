@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>dg.js - javascript dynamic geometry library</title>
+	<title>dg.js function intersection example</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF8">
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.1.0/styles/default.min.css">
@@ -51,41 +51,32 @@
 			
 			</div>
 			<div class="col-md-8" id="">
-				<h1 style="font-size: 33px;"><mark>dg.js</mark> - javascript dynamic geometry library</h1>
-				<p>
-					dg.js is javascript library for dynamic geometry. 
-					DG helps you build, visualize and explore relationship between geometry objects in intuitve and interactive way.
-				</p>	
-				<h3>Interpreter</h3>
-				<p>
-					If you want to create quick examples check out <a href="interpreter.html">interpreter</a>.
-				</p>
-				<hr />
-				<p>Here is a small list of examples to get familiar with <mark>dg.js</mark>.
-				If you make some example using dg.js make sure to send code and I'll include them here with reference to you.</p>
-				<h3>Examples list</h3>
-				<ul>
-					<li><a href="example_triangle_animation.html">triangle animation example</a></li>
-					<li><a href="example_weel_animation.html">weel simulation</a></li>
-					<li><a href="example_tangent_construction.html">tangent construction</a></li>
-					<li><a href="example_regular_polygons.html">drawing regular polygons in dg.js</a></li>
-					<li><a href="example_orthocenter.html">triangle orthocenter</a></li>
-					<li><a href="example_line_intersection.html">line intersection example</a></li>
-					<li><a href="example_line_dependency.html">demonstration of line dependency</a></li>
-					<li><a href="example_inscribedcircle.html">inscribed circle</a></li>
-					<li><a href="example_function_intersection.html">intersection of functions</a></li>
-					<li><a href="example_function_animation.html">function animation example</a></li>
-					<li><a href="example_circumcenter.html">circumcenter example</a></li>
-					<li><a href="example_dg_events.html">demonstrating dg events</a></li>					
-				</ul>
-				<h3>API</h3>
-				<p>To see full API & download check out <a href="https://github.com/ddr-/dg">dg.js at github</a>.
+				<p>dg.js function intersection example - <a href="mailto:rakonjac.djordje@gmail.com">Djordje Rakonjac</a> / december, 2015</p>
 
-				</p>
-				<h3>Contribute</h3>
-				<p>
-					See <a href="https://github.com/ddr-/dg">github</a> page on how to contribute.
-				</p>
+				<div class="row examples">
+
+				</div>
+				<div class="row">
+					<canvas id="testcanvas"></canvas>
+					<p>Notice that cosine intersection with x axis has domain [-30, 30] by our param, otherwise it would be visible canvas domain. Zoom out and check.
+					P.S. <mark>dg.Intersect(f1,f2)</mark> of type <mark>Function</mark> returns an array of <mark>Points</mark>.</p>
+					<h5>dg.js example code</h5>
+					<pre><code class="lang-javascript">
+		var canvas = dg.Canvas("testcanvas", { border: "1px solid #ccc"});
+		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
+		
+		var g = dg.Function(function(x) { return 1/x; });
+		var f = dg.Function(function(x) { return x*x; }, "#ff0000").color(dg.color.rand());
+		var f1 = dg.Function(function(x) { return Math.cos(x); }, dg.color.rand());
+		
+		var i1 = dg.Intersect(f, f1);
+		
+		var f2 = dg.Function(function(x) { return 0; });
+		
+		var i3 = dg.Intersect(f1, f2, [-30, 30]);
+					
+					</code></pre>
+				</div>
 			</div>
 			<div class="col-md-2">
 
@@ -94,6 +85,18 @@
 
 	<div class="row-fluid" style="margin: 10px;">copyright 2016, <a href="mailto:rakonjac.djordje@gmail.com">Djordje Rakonjac</a></div>
 	</div>
+	<script type="text/javascript">
+		var canvas = dg.Canvas("testcanvas", { border: "1px solid #ccc"});
+		var axes = dg.Axes([canvas.width() / 4, canvas.height() / 1.5]).hide(false);
+		
+		
+		var f = dg.Function(function(x) { return x*x; }, "#ff0000").color(dg.color.rand());
+		var f1 = dg.Function(function(x) { return Math.cos(x); }, dg.color.rand());
+		var i1 = dg.Intersect(f, f1);
+		var f2 = dg.Function(function(x) { return 0; });
+		var i3 = dg.Intersect(f1, f2, [-30, 30]);
 
+		
+	</script>	
 </body>
 </html>
