@@ -726,6 +726,9 @@
 			this.recalc_lc();
 		}
 	}
+	dg.geom.Intersection.prototype.str = function() {
+		return "Intersect( " + this._g0.str() + " , " + this._g1.str() + " )";
+	}
 	dg.geom.Intersection.prototype.draw = function() {
 		for(var i = 0; i < this._intersections.length; i++) {
 			this._intersections[i].draw();
