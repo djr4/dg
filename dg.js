@@ -1310,7 +1310,6 @@
 			for(var i = 0; i < this._attached.length; i++) {
 				var g = this._attached[i];
 	
-				//var dist = this._p0.dist(g.geom);
 				var dist = g.d;
 				var v = new dg.geom.Vector([ this._p1.x() - this._p0.x(), this._p1.y() - this._p0.y() ]);
 				v = v.mul(1/ v.norm());
@@ -1326,6 +1325,7 @@
 	dg.geom.Segment.prototype.attach = function(g) {
 		g.free(false);
 		this._attached.push({geom: g, d: this._p0.dist(g) ,dist: this._p0.dist(this._p1) , ratio: this._p0.dist(g) / this._p1.dist(g) });
+		return this;
 	}	
 	dg.geom.Segment.prototype.draw = function() { 
 		var c = this._color;
@@ -1359,7 +1359,29 @@
 		dg_repaint();
 		return this;
 	}
-	dg.geom.Line.prototype.recalc = function() {}
+	dg.geom.Line.prototype.attach = function(g) {
+		g.free(false);
+		this._attached.push({geom: g, d: this._p0.dist(g) ,dist: this._p0.dist(this._p1) , ratio: this._p0.dist(g) / this._p1.dist(g) });
+		return this;
+	}	
+	dg.geom.Line.prototype.recalc = function() {
+		
+		if(this._attached.length > 0) {
+			for(var i = 0; i < this._attached.length; i++) {
+				var g = this._attached[i];
+	
+				var dist = g.d;
+				var v = new dg.geom.Vector([ this._p1.x() - this._p0.x(), this._p1.y() - this._p0.y() ]);
+				v = v.mul(1/ v.norm());
+				v = v.mul( dist * (this._p0.dist(this._p1) / g.dist) );
+				g.geom.x( this._p0.x() + v.x() );
+				g.geom.y( this._p0.y() + v.y() );
+				
+				g.dist = this._p0.dist(this._p1);
+				g.d = this._p0.dist(g.geom);
+			}
+		}		
+	}
 
 	dg.geom.Line.prototype.draw = function() { 
 		var p0 = dg.geom.transform([this._p0.x(), this._p0.y()]);
