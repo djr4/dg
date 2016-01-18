@@ -171,6 +171,9 @@ Constructor: `Segment (Point p0, Point p1)`
 `color(string c)` set segment color
 * Return Value: `Segment`
 
+`attach(Point p)` attach point p to line.
+* Return Value: `Segment`
+
 #### dg.geom.Line
 
 Constructor: `Line (Point p0, Point p1)`
@@ -188,6 +191,9 @@ Constructor: `Line (Point p0, Point p1)`
 * Example `dg.Line(dg.Point([0,0]), dg.Point([1,0])).p1();` 
 
 `color(string c)` set line color
+* Return Value: `Line`
+
+`attach(Point p)` attach point p to line.
 * Return Value: `Line`
 
 #### dg.geom.PerpendicularLine
