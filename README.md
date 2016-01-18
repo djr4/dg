@@ -174,6 +174,14 @@ Constructor: `Segment (Point p0, Point p1)`
 `attach(Point p)` attach point p to line.
 * Return Value: `Segment`
 
+#### dg.geom.MapPoint
+
+`dg.geom.MapPoint` inherits `dg.geom.Point`
+
+Constructor: `MapPoint (Point p, function f)`
+* Return Value: reference to point mapped applying function false
+* Example: `dg.MapPoint(p, function(x){ return x*x;});`
+
 #### dg.geom.Line
 
 Constructor: `Line (Point p0, Point p1)`
