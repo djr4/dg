@@ -107,6 +107,15 @@ Constructor: `dg.Angle(Point p0, Point p1, Point p2)`
 * Return Value: `number` | `Point`
 * Example `dg.Point([0,0]).y(2);` sets y coordinate to 2.
 
+`translate(Point p)` translate point by vector built by [0,0], Point 
+* Return Value: `Point`
+* Example `dg.Point([0,0]).translate(new dg.geom.Point([1,1]))`
+
+`rotate(?(Point p,) number theta)` if p supplied rotates around a Point p, otherwise around coordinate begining (counterclockwise)
+* Return Value: `Point`
+* Example `dg.Point([1,1]).rotate(Math.PI);` 
+* Example `dg.Point([1,1]).rotate(new dg.geom.Point([1,0]), Math.PI));`
+
 `free(boolean b)`  Locks point interaction on canvas
 * Return Value: `Point`
 * Example `dg.Point([0,0]).free(false);` 

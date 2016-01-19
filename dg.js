@@ -1098,6 +1098,29 @@
 
 		return this;
 	}
+	dg.geom.Point.prototype.translate = function(p) {
+		this._x += p.x();
+		this._y += p.y();
+		return this;
+	}
+	dg.geom.Point.prototype.rotate = function() {
+		if(arguments.length == 1) {
+			var theta = arguments[0];
+			var rot = dg.rotate([ this._x, this._y ], theta);
+		
+			this._x = rot[0];
+			this._y = rot[1];			
+		} else if(arguments.length == 2) {
+			var p = arguments[0];
+			var theta = arguments[1];
+			var rot = dg.rotate([ this._x - p.x(), this._y - p.y()], theta);
+		
+			this._x = rot[0] + p.x();
+			this._y = rot[1] + p.y();
+		}
+		
+		return this;
+	}
 	dg.geom.Point.prototype.addEvent = function(en, callback) {
 		if(en == "moved") {
 			this._events["moved"] = { dg_object: this, dispatch: callback };
