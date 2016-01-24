@@ -4,7 +4,7 @@ geometry objects in intuitve and interactive way.
 
 # Resources
 
-- [Examples](http://alas.matf.bg.ac.rs/~mi09109/)
+- [Examples](http://jason.matf.bg.ac.rs/~dg/) - dg library page. 
 
 # API Reference
 
