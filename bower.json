@@ -1,0 +1,25 @@
+{
+  "name": "dg",
+  "description": "dynamic geometry javascript library",
+  "main": "dg.js",
+  "authors": [
+    "Djordje Rakonjac <rakonjac.djordje@gmail.com> (http://jason.matf.bg.ac.rs/~dg/)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "dg",
+    "dgjs"
+  ],
+  "moduleType": [
+    "amd",
+    "globals"
+  ],
+  "homepage": "http://jason.matf.bg.ac.rs/~dg/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

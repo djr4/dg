@@ -2,6 +2,12 @@
 **dg.js** is javascript library for dynamic geometry. **DG** helps you visualize and explore relationship between 
 geometry objects in intuitve and interactive way.
 
+# Installation
+
+via npm 
+
+`npm install dglib` 
+
 # Resources
 
 - [Examples](http://jason.matf.bg.ac.rs/~dg/) - dg library page. 

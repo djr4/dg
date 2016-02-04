@@ -1,0 +1,28 @@
+{
+  "name": "dglib",
+  "version": "1.0.1",
+  "description": "dynamic geometry javascript library",
+  "main": "dg.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddr-/dg.git"
+  },
+  "keywords": [
+    "dg",
+    "dgjs",
+    "dg-lib",
+    "dglib"
+  ],
+  "author": "Djordje Rakonjac <rakonjac.djordje@gmail.com> (http://jason.matf.bg.ac.rs/~dg/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ddr-/dg/issues"
+  },
+  "homepage": "https://github.com/ddr-/dg#readme",
+  "directories": {
+    "example": "examples"
+  }
+}
