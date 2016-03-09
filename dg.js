@@ -1,5 +1,5 @@
 /* 
-	dynamic geometry v1.0.1 (dg.js)
+	dynamic geometry v1.0.2 (dg.js)
 	Djordje Rakonjac
 		rakonjac.djordje@gmail.com
 	Mentor: Filip Maric
@@ -10,31 +10,33 @@
 !function() {
  
 	var dg = {
-		version: "1.0.1"
+		version: "1.0.2"
 	};
 	
 	var dg_document = this.document;
 	var dg_canvas_context;
 	var dg_canvas_width, dg_canvas_height;
 	var dg_canvas_element;
-	
-	var POINT = 1;
-	var VECTOR = 2;
-	var MIDPOINT = 3;
-	var LINE = 4;
-	var SEGMENT = 5;
-	var PERPENDICULAR = 6;
-	var PERPENDICULAR_BISECTOR = 7;
-	var ANGLE_BISECTOR = 8;
-	var PARALLEL = 9;
-	var CIRCLE = 10;
-	var TANGENT = 11;
-	var POLYGON = 12;
-	var FUNCTION = 13;
-	var INTERSECTION = 14;
-	var ANGLE = 15;
-	var MAP_POINT = 16; 
-		
+
+        var POINT = 1;
+        var VECTOR = 2;
+        var MIDPOINT = 3;
+        var LINE = 4;
+        var SEGMENT = 5;
+        var PERPENDICULAR = 6;
+        var PERPENDICULAR_BISECTOR = 7;
+        var ANGLE_BISECTOR = 8;
+        var PARALLEL = 9;
+        var CIRCLE = 10;
+        var TANGENT = 11;
+        var POLYGON = 12;
+        var FUNCTION = 13;
+        var INTERSECTION = 14;
+        var ANGLE = 15;
+        var MAP_POINT = 16;
+        var MAP_POINTS = 17;
+        var TRANSLATE_POINT = 18;
+    
 	function dg_repaint() {
 		dg_clear_canvas();
 		dg_draw_axes();
@@ -160,11 +162,13 @@
 		/* prioratize points */
 		var points_pos = [];
 		if(dg.geom.objects.length > 0) {
+				
 			for(var i = dg.geom.objects.length - 1; i > -1; i--) {
-				if(dg.geom.objects[i]._type == INTERSECTION || 
-					dg.geom.objects[i]._type == POINT || 
-					dg.geom.objects[i]._type == MIDPOINT ||
-					dg.geom.objects[i]._type == MAP_POINT) {
+			        if(dg.geom.objects[i]._type == INTERSECTION ||
+   		                   dg.geom.objects[i]._type == POINT ||
+				   dg.geom.objects[i]._type == MIDPOINT ||
+				   dg.geom.objects[i]._type == MAP_POINT ||
+				   dg.geom.objects[i]._type == MAP_POINTS) {
 					points_pos.push(i);
 					continue;
 				}
@@ -300,13 +304,27 @@
 			return i._intersections[0];
 	}
 
-	dg.MapPoint = function(p, f) {
-		var mp = new dg.geom.MapPoint(p, f);
+        dg.MapPoint = function(p, f) {
+	        var mp = new dg.geom.MapPoint(p, f);
 		dg.geom.objects.push(mp);
 		dg_repaint();
 		return mp;
-	}	
-	
+        }
+
+        dg.MapPoints = function(ps, f) {
+	        var mp = new dg.geom.MapPoints(ps, f);
+		dg.geom.objects.push(mp);
+		dg_repaint();
+		return mp;
+        }
+    
+        dg.TranslatePoint = function(p, v1, v2) {
+  	        var mp = new dg.geom.TranslatePoint(p, v1, v2);
+		dg.geom.objects.push(mp);
+		dg_repaint();
+		return mp;
+        }
+    
 	function dg_count_objects(type) {
 		k = 0;
 		for(var i = 0; i < dg.geom.objects.length; i++) 
@@ -704,7 +722,7 @@
 		var t0 = this._g0._type;
 		var t1 = this._g1._type;
 		
-		if(t0 !== FUNCTION && t1 !== FUNCTION) {
+		if(t0 !== 13 && t1 !== 13) {
 			/* add dependencies */
 			this._g0._p0._d.push(this);
 			this._g0._p1._d.push(this);
@@ -714,7 +732,7 @@
 		
 		
 		if((t0 == LINE || t0 == SEGMENT || t0 == PERPENDICULAR || t0 == PERPENDICULAR_BISECTOR || t0 == ANGLE_BISECTOR || t0 == PARALLEL) &&
-		(t1 == LINE || t1 == SEGMENT || t1 == PERPENDICULAR || t1 == PERPENDICULAR_BISECTOR || t1 == ANGLE_BISECTOR || t1 == PARALLEL)) {
+   		   (t1 == LINE || t1 == SEGMENT || t1 == PERPENDICULAR || t1 == PERPENDICULAR_BISECTOR || t1 == ANGLE_BISECTOR || t1 == PARALLEL)) {
 			this.ll();
 
 		}
@@ -743,7 +761,7 @@
 		var t0 = this._g0._type;
 		var t1 = this._g1._type;
 		if((t0 == LINE || t0 == SEGMENT || t0 == PERPENDICULAR || t0 == PERPENDICULAR_BISECTOR || t0 == ANGLE_BISECTOR || t0 == PARALLEL) &&
-		(t1 == LINE || t1 == SEGMENT || t1 == PERPENDICULAR || t1 == PERPENDICULAR_BISECTOR || t1 == ANGLE_BISECTOR || t1 == PARALLEL)) {
+   		   (t1 == LINE || t1 == SEGMENT || t1 == PERPENDICULAR || t1 == PERPENDICULAR_BISECTOR || t1 == ANGLE_BISECTOR || t1 == PARALLEL)) {
 			this.recalc_ll();
 		} else if(t0 == CIRCLE && t1 == CIRCLE) {
 			this.recalc_cc();
@@ -752,9 +770,6 @@
 		} else if((t0 == LINE || t0 == SEGMENT) && t1 == CIRCLE) {
 			this.recalc_lc();
 		}
-	}
-	dg.geom.Intersection.prototype.str = function() {
-		return "Intersect( " + this._g0.str() + " , " + this._g1.str() + " )";
 	}
 	dg.geom.Intersection.prototype.draw = function() {
 		for(var i = 0; i < this._intersections.length; i++) {
@@ -921,6 +936,11 @@
 		
 		this._intersections[0].x(x).y(y);		
 	}
+	dg.geom.Intersection.prototype.hide = function() {
+		console.log("Hiding intersections");
+		for (i = 0; i < this._intersections.length; i++)
+			this._intersections[i].hide();
+	}
 	
 	dg.geom.Angle = function() {
 		this._d = new dg.geom.Dependency();
@@ -999,9 +1019,6 @@
 	}
 	dg.geom.Angle.prototype.deg = function() {
 		return this._angle * 180 / Math.PI;
-	}
-	dg.geom.Angle.prototype.str = function() {
-		return "Angle( " + this._p0.str() + ", " + this._p1.str() + ", " + this._p2.str() + " )";
 	}
 	dg.geom.Angle.prototype.draw = function() {
 		var pc = dg.geom.transform([this._pos.x(), this._pos.y()]);
@@ -1084,78 +1101,45 @@
 			return this;
 		}
 	}
-	
-	dg.geom.Point = function(d) {
+
+    dg.geom.Point = function(d) {
 		this._x = d[0];
 		this._y = d[1];
 		this._type = POINT;
 		this._label = "A" + dg_count_objects(1);
-		this._free = 1;
+	this._free = 1;
+	this._hide = false;
 		this._color = "#0000ff";
 		this._size = 4; 
 		this._d = new dg.geom.Dependency();
-		this._events = {};
-
 		return this;
 	}
-	dg.geom.Point.prototype.translate = function(p) {
-		this._x += p.x();
-		this._y += p.y();
+	dg.geom.Point.prototype.color = function(c) {
+		this._color = c;
+		dg_repaint();
 		return this;
 	}
-	dg.geom.Point.prototype.rotate = function() {
-		if(arguments.length == 1) {
-			var theta = arguments[0];
-			var rot = dg.rotate([ this._x, this._y ], theta);
-		
-			this._x = rot[0];
-			this._y = rot[1];			
-		} else if(arguments.length == 2) {
-			var p = arguments[0];
-			var theta = arguments[1];
-			var rot = dg.rotate([ this._x - p.x(), this._y - p.y()], theta);
-		
-			this._x = rot[0] + p.x();
-			this._y = rot[1] + p.y();
-		}
-		
+	dg.geom.Point.prototype.size = function(s) {
+		this._size = s;
+		dg_repaint();
 		return this;
-	}
-	dg.geom.Point.prototype.addEvent = function(en, callback) {
-		if(en == "moved") {
-			this._events["moved"] = { dg_object: this, dispatch: callback };
-		}
-		if(en == "click") {
-			this._events['click'] = { dg_object: this, dispatch: callback };
-		}
-		return this;
-	}
-	dg.geom.Point.prototype.str = function() {
-		return "Point( " + this._x.toFixed(2) + ", " + this._y.toFixed(2) + " )"; 
-	}
-	dg.geom.Point.prototype.color = function() {
-		if(arguments.length > 0) {
-			this._color = arguments[0];
-			dg_repaint();
-			return this;
-		} else {
-			return this._color;
-		}
-	}
-	dg.geom.Point.prototype.size = function() {
-		if(arguments.length> 0) {
-			this._size = arguments[0];
-			dg_repaint();
-			return this;
-		} else {
-			return this._size;
-		}
 	}
 	dg.geom.Point.prototype.free = function(f) {
 		this._free = f;
 		dg_repaint();
 		return this;
 	}
+
+    dg.geom.Point.prototype.hide = function() {
+	this._hide = true;
+	dg_repaint();
+	return this;
+    }
+    dg.geom.Point.prototype.show = function() {
+	this._hide = false;
+	dg_repaint();
+	return this;
+    }    
 	
 	dg.geom.Point.prototype.dist = function(p) {
 		return Math.sqrt( Math.pow(p.x() - this._x, 2) + Math.pow(p.y() - this._y , 2) );
@@ -1163,13 +1147,13 @@
 	dg.geom.Point.prototype.xy = function() {
 		return [ this._x, this._y ];
 	}
-	dg.geom.Point.prototype.draw = function() {
-		
-		if(this._d.length() > 0) {
+        dg.geom.Point.prototype.draw = function() {
+			if (this._hide) return;
+ 		if(this._d.length() > 0) {
 			for(var i = 0; i < this._d.length(); i++)
 				this._d.get(i).recalc();
 		}
-		if(this._free == false && this._color == "#0000ff")
+		if(this._free == false)
 			dg_canvas_context.fillStyle = "#444444";
 		else
 			dg_canvas_context.fillStyle = this._color;
@@ -1189,10 +1173,6 @@
 			return this._x;
 		else {
 			this._x = arguments[0];
-			if(this._events['moved'] != undefined) {
-				this._events['moved'].dispatch();
-			}
-
 			return this;
 		}
 	}
@@ -1201,24 +1181,16 @@
 			return this._y;
 		else {
 			this._y = arguments[0];
-			if(this._events['moved'] != undefined) {
-				this._events['moved'].dispatch();	
-			}				
-	
 			return this;
 		}
 	}
 	dg.geom.Point.prototype.setX = function(x) {
 		this._x = x;
-		if(this._events['moved'] != undefined)
-			this._events['moved'].dispatch();		
 		dg_repaint();
 		return this;
 	}
 	dg.geom.Point.prototype.setY = function(y) {
 		this._y = y;
-		if(this._events['moved'] != undefined)
-			this._events['moved'].dispatch();		
 		dg_repaint();
 		return this;
 	}
@@ -1231,33 +1203,90 @@
 			return this;
 		}
 	}
-	
-	dg.geom.MapPoint = function(p, f) {
-		this._d = new dg.geom.Dependency();
-		this._p = p;
-		this._f = f;
-		this._type = MAP_POINT;
-		
-		var fp = dg.geom.Point.call(this, f(p.xy()));
-		this._p._d.push(fp);
-		this._free = 0;
-		
-		return this;
-	}
 
-	dg.geom.MapPoint.prototype = Object.create(dg.geom.Point.prototype);
-	dg.geom.MapPoint.prototype.constructor = dg.geom.MapPoint;
-	dg.geom.MapPoint.prototype.recalc = function() {
-		var v = this._f(this._p.xy());
-		this._x = v[0];
-		this._y = v[1];
-		/* if geom dependent on midpoint recalculate */
-		if(this._d.length() > 0) {
-			for(var i = 0; i < this._d.length(); i++)
-				this._d.get(i).recalc();
-			}
-	}	
-	
+    dg.geom.TranslatePoint = function(p, v1, v2) {
+	this._d = new dg.geom.Dependency();
+	this._p = p;
+	this._v1 = v1;
+	this._v2 = v2;
+	this._type = TRANSLATE_POINT;
+	var tp = dg.geom.Point.call(this, [p.x() + v2.x() - v1.x(), p.y() + v2.y() - v1.y()] );
+	this._p._d.push(tp);
+	this._v1._d.push(tp);
+	this._v2._d.push(tp);
+	this._free = 0;
+	return this;
+    }
+    dg.geom.TranslatePoint.prototype = Object.create(dg.geom.Point.prototype);
+    dg.geom.TranslatePoint.constructor = dg.geom.TranslatePoint;
+    dg.geom.TranslatePoint.prototype.recalc = function() {
+	var p = this._p.xy();
+	var v1 = this._v1.xy();
+	var v2 = this._v2.xy();
+	var tp = [p[0] + v2[0] - v1[0], p[1] + v2[1] - v1[1]];
+	this._x = tp[0];
+	this._y = tp[1];
+	/* if geom dependent on mapped point recalculate */
+	if(this._d.length() > 0) {
+	    for(var i = 0; i < this._d.length(); i++)
+		this._d.get(i).recalc();
+	}
+    }
+    
+    dg.geom.MapPoint = function(p, f) {
+   	this._d = new dg.geom.Dependency();
+	this._p = p;
+	this._f = f;
+    	this._type = MAP_POINT;
+	var fp = dg.geom.Point.call(this, [0, 0]);
+	this._p._d.push(fp);
+	this._free = 0;
+	return this;
+    }
+
+    dg.geom.MapPoint.prototype = Object.create(dg.geom.Point.prototype);
+    dg.geom.MapPoint.prototype.constructor = dg.geom.MapPoint;
+    dg.geom.MapPoint.prototype.recalc = function() {
+	var v = this._f(this._p.xy());
+	this._x = v[0];
+	this._y = v[1];
+	/* if geom dependent on mapped point recalculate */
+	if(this._d.length() > 0) {
+	    for(var i = 0; i < this._d.length(); i++)
+		this._d.get(i).recalc();
+	}
+    }
+
+
+    dg.geom.MapPoints = function(ps, f) {
+   	this._d = new dg.geom.Dependency();
+	this._ps = ps;
+	this._f = f;
+    	this._type = MAP_POINTS;
+	var fp = dg.geom.Point.call(this, [0, 0]);
+	for (var i = 0; i < ps.length; i++)
+	    this._ps[i]._d.push(fp);
+	this._free = 0;
+	return this;
+    }
+
+    dg.geom.MapPoints.prototype = Object.create(dg.geom.Point.prototype);
+    dg.geom.MapPoints.prototype.constructor = dg.geom.MapPoints;
+    dg.geom.MapPoints.prototype.recalc = function() {
+	var args = [];
+	for (var i = 0; i < this._ps.length; i++)
+	    args[i] = this._ps[i].xy();
+	var v = this._f.apply(null, args);
+	this._x = v[0];
+	this._y = v[1];
+	/* if geom dependent on mapped point recalculate */
+	if(this._d.length() > 0) {
+	    for(var i = 0; i < this._d.length(); i++)
+		this._d.get(i).recalc();
+	}
+    }
+
+    
 	dg.geom.Midpoint = function() {
 		this._d = new dg.geom.Dependency();
 		if(arguments.length == 1) {
@@ -1281,23 +1310,16 @@
 	}
 	dg.geom.Midpoint.prototype = Object.create(dg.geom.Point.prototype);
 	dg.geom.Midpoint.prototype.constructor = dg.geom.Midpoint;
-	dg.geom.Midpoint.prototype.str = function() {
-		return "Midpoint( " + this._x + ", " + this._y + " )"; 
-	}
 	dg.geom.Midpoint.prototype.recalc = function() { 
 		var centroid = dg.centroid([this._p0, this._p1]);
 		
-		this.x( centroid.x() );
-		this.y( centroid.y() );
-			
+		this._x = centroid.x();
+		this._y = centroid.y();
 		/* if geom dependent on midpoint recalculate */
 		if(this._d.length() > 0) {
-			
 			for(var i = 0; i < this._d.length(); i++)
 				this._d.get(i).recalc();
 		}
-			
-
 	}
 	
 	dg.geom.Segment = function(p0, p1) {
@@ -1306,16 +1328,9 @@
 		this._p1 = p1;
 		this._type = SEGMENT;
 		this._color = "#202020";
-		this._attached = [];
-		
-		this._p0._d.push(this);
-		this._p1._d.push(this);
 		
 		return this;
 	}
-	dg.geom.Segment.prototype.str = function() {
-		return "Segment( " + this._p0.str() + ", " + this._p1.str() + " )"; 
-	}	
 	dg.geom.Segment.prototype.p0 = function() { 
 		return this._p0;
 	}
@@ -1327,29 +1342,8 @@
 		dg_repaint();
 		return this;
 	}
-	dg.geom.Segment.prototype.recalc = function() {
-		
-		if(this._attached.length > 0) {
-			for(var i = 0; i < this._attached.length; i++) {
-				var g = this._attached[i];
+	dg.geom.Segment.prototype.recalc = function() {}
 	
-				var dist = g.d;
-				var v = new dg.geom.Vector([ this._p1.x() - this._p0.x(), this._p1.y() - this._p0.y() ]);
-				v = v.mul(1/ v.norm());
-				v = v.mul( dist * (this._p0.dist(this._p1) / g.dist) );
-				g.geom.x( this._p0.x() + v.x() );
-				g.geom.y( this._p0.y() + v.y() );
-				
-				g.dist = this._p0.dist(this._p1);
-				g.d = this._p0.dist(g.geom);
-			}
-		}
-	}
-	dg.geom.Segment.prototype.attach = function(g) {
-		g.free(false);
-		this._attached.push({geom: g, d: this._p0.dist(g) ,dist: this._p0.dist(this._p1) , ratio: this._p0.dist(g) / this._p1.dist(g) });
-		return this;
-	}	
 	dg.geom.Segment.prototype.draw = function() { 
 		var c = this._color;
 		if(arguments.length > 0)
@@ -1359,17 +1353,15 @@
 
 		dg_draw_segment(p0, p1, c);
 	}
-
+	
 	dg.geom.Line = function(p0, p1) {
+		this._hide = false;
 		this._d = new dg.geom.Dependency();
 		this._p0 = p0;
 		this._p1 = p1;
 		this._type = LINE;
 		this._color = "#202020";
 		return this;
-	}
-	dg.geom.Line.prototype.str = function() {
-		return "Line( " + this._p0.str() + ", " + this._p1.str() + " )"; 
 	}
 	dg.geom.Line.prototype.p0 = function() { 
 		return this._p0;
@@ -1382,31 +1374,16 @@
 		dg_repaint();
 		return this;
 	}
-	dg.geom.Line.prototype.attach = function(g) {
-		g.free(false);
-		this._attached.push({geom: g, d: this._p0.dist(g) ,dist: this._p0.dist(this._p1) , ratio: this._p0.dist(g) / this._p1.dist(g) });
-		return this;
-	}	
-	dg.geom.Line.prototype.recalc = function() {
-		
-		if(this._attached.length > 0) {
-			for(var i = 0; i < this._attached.length; i++) {
-				var g = this._attached[i];
-	
-				var dist = g.d;
-				var v = new dg.geom.Vector([ this._p1.x() - this._p0.x(), this._p1.y() - this._p0.y() ]);
-				v = v.mul(1/ v.norm());
-				v = v.mul( dist * (this._p0.dist(this._p1) / g.dist) );
-				g.geom.x( this._p0.x() + v.x() );
-				g.geom.y( this._p0.y() + v.y() );
-				
-				g.dist = this._p0.dist(this._p1);
-				g.d = this._p0.dist(g.geom);
-			}
-		}		
-	}
+	dg.geom.Line.prototype.recalc = function() {}
 
+	dg.geom.Line.prototype.hide = function() {
+		this._hide = true;
+		dg_repaint();
+		return this;
+	}
+	
 	dg.geom.Line.prototype.draw = function() { 
+	    if (this._hide) return;
 		var p0 = dg.geom.transform([this._p0.x(), this._p0.y()]);
 		var p1 = dg.geom.transform([this._p1.x(), this._p1.y()]);
 
@@ -1449,7 +1426,7 @@
 	dg.geom.PerpendicularBisector = function() {
 		this._d = new dg.geom.Dependency();
 		if(arguments.length > 1) {
-			this._p = new dg.geom.Midpoint(arguments[0].xy(), arguments[1].xy());
+			this._p = new dg.geom.Midpoint(arguments[0], arguments[1]);
 			this._l = new dg.geom.Segment(arguments[0], arguments[1]);
 			
 		} else {
@@ -1561,9 +1538,6 @@
 		
 		return this;
 	}
-	dg.geom.Circle.prototype.str = function() {
-		return "Circle( " + this._p0.str() + ", " + this._p1.str() + " )"; 
-	}	
 	dg.geom.Circle.prototype.recalc = function() {
 		this._r = this._p0.dist(this._p1);
 		
@@ -1604,9 +1578,6 @@
 		this._type = TANGENT;
 	
 		return this;
-	}
-	dg.geom.Tangent.prototype.str = function() {
-		return "Tangent( " + this._p.str() + " , " + this._c.str() + " )";
 	}
 	dg.geom.Tangent.prototype.recalc = function() { 
 		this._mp = new dg.geom.Midpoint(this._p, this._c._p0);
@@ -1666,18 +1637,6 @@
 		
 		return this;
 	}
-	dg.geom.Polygon.prototype.str = function() {
-		if(this._n == 0) {
-			var rstring = "Polygon( " + this._points[0].str();
-			for(var i = 1; i < this._points.length; i++) {
-				rstring += (", " + this._points[i].str());
-			}
-			rstring += " )";
-			return rstring;
-		} else {
-			return "Polygon( " + this._points[0].str() + ", " + this._points[1].str() + ", " + this._n + " )";
-		}
-	}
 	dg.geom.Polygon.prototype.color = function(c) {
 		this._color = c;
 		dg_repaint();
@@ -1733,9 +1692,6 @@
 		this._type = FUNCTION;
 		return this;
 	}
-	dg.f.Function.prototype.str = function() {
-		return "Function( " + this._f.toString() + " )";
-	}
 	dg.f.Function.prototype.setF = function(f) {
 		this._f = f;
 		this.draw();
@@ -1751,11 +1707,8 @@
 		dg_repaint();
 		return this;
 	}
-	dg.f.Function.prototype.f = function() {
-		if(arguments.length == 1)
-			return this._f(arguments[0]);
-		else if(arguments.length == 2)
-			return this._f(arguments[0], arguments[1]);
+	dg.f.Function.prototype.f = function(x) {
+		return this._f(x);
 	}
 	dg.f.Function.prototype.draw = function() { 
 		var axes = dg.axes.objects[0];
@@ -1764,21 +1717,18 @@
 		var ymin = axes._yaxis._dmin;
 		var ymax = axes._yaxis._dmax;
 		
-		if(this._f.length == 1) {
-			var i = xmin;
-			var p0 = dg.geom.transform([i, this.f(i)]);
-			var p1;
+		var i = xmin;
+		var p0 = dg.geom.transform([i, this.f(i)]);
+		var p1;
+		
+		while(i < xmax) {
+			p1 = dg.geom.transform([i + this._step, this.f(i + this._step)]);
+			if(this.f(i) < ymax + this._step && this.f(i+this._step) > ymin - this._step)
+				dg_draw_segment(p0, p1, this._style);
 			
-			while(i < xmax) {
-				p1 = dg.geom.transform([i + this._step, this.f(i + this._step)]);
-				if(this.f(i) < ymax + this._step && this.f(i+this._step) > ymin - this._step)
-					dg_draw_segment(p0, p1, this._style);
-				
-				p0 = p1;
-				i+= this._step;
-			}
-			
-		} 
+			p0 = p1;
+			i+= this._step;
+		}
 	}
 	dg.canvas = {};
 
@@ -1856,10 +1806,6 @@
 		
 						/* set object to manipulate */
 						this._g = dg.geom.objects[i];
-						
-						/* dispatch if click event registered */
-						if(this._g._events['click'] != undefined)
-							this._g._events['click'].dispatch();						
 					}
 				}
 
@@ -1900,7 +1846,6 @@
 			
 			this._g.x(gpos[0]);
 			this._g.y(gpos[1]);
-			
 			/* recalculate dependent geom objects */
 			this._g._d.recalc();
 			dg_repaint();
