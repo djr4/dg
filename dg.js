@@ -1,5 +1,5 @@
 /* 
-	dynamic geometry v1.0.2 (dg.js)
+	dynamic geometry v1.0.3 (dg.js)
 	Djordje Rakonjac
 		rakonjac.djordje@gmail.com
 	Mentor: Filip Maric
@@ -10,7 +10,7 @@
 !function() {
  
 	var dg = {
-		version: "1.0.2"
+		version: "1.0.3"
 	};
 	
 	var dg_document = this.document;
