@@ -1,6 +1,6 @@
 {
   "name": "dglib",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "dynamic geometry javascript library",
   "main": "dg.js",
   "scripts": {
